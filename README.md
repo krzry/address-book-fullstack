@@ -36,7 +36,7 @@ initialize a project and track any dependencies required to run your project.
 2. The look and feel of the application is up to you. Feel free to use existing
    UI libraries, or design your own interface.
 
-   > Working implementations are worth more that a pretty looking interface.
+   > Working implementations are worth more than a pretty looking interface.
 
 3. Your backend API should require authentication to access the address book
    functionality. You should implement your authorization and sign-in using
