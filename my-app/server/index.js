@@ -3,6 +3,7 @@ const massive = require("massive");
 const users = require('./Controllers/Users');
 const secret = require("../secret");
 const jwt = require("jsonwebtoken");
+const cors =require('cors')
 
 massive({
   host: "localhost",
@@ -14,7 +15,7 @@ massive({
   const app = express();
 
   app.set("db", db);
-
+  app.use(cors())
   app.use(express.json());
   
   //USERS

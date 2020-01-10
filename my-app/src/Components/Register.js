@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
@@ -7,6 +7,13 @@ import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import { Redirect } from "react-router-dom";
+import axios from "axios";
+
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -31,14 +38,70 @@ export default function Register() {
       firstname: "",
       lastname: "",
       username: "",
-      password: "",
-      confirmPassword: ""
+      password: ""
     }
   });
+  const [confirmPassword, setconfirmPassword] = useState("");
   const [validationPass, setvalidationPass] = useState(null);
+  const [switchTogle, setSwitchTogle] = useState({
+    open: false,
+    toggleRedir: false
+  });
+
+  // SWITCH
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSwitchTogle({
+      ...switchTogle,
+      open: false
+    });
+  };
+
+  const successRegister = () => {
+    if (switchTogle.toggleRedir) {
+      setTimeout(() => {
+        setRedirect(true);
+      }, 3000);
+    }
+  };
+  // ENDSWITCH
+
+  const register = e => {
+    e.preventDefault();
+    if (validationPass) {
+      axios({
+        method: "post",
+        url: `http://localhost:3003/api/users`,
+        data: state.data
+      })
+        .then(data => {
+          console.log(data);
+          setSwitchTogle({
+            open: true,
+            toggleRedir: true
+          });
+        })
+        .catch(err => console.log(err));
+    }
+  };
+
+  const redirectRegister = () => {
+    if (redirect) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/"
+          }}
+        />
+      );
+    }
+  };
 
   const validatePassFn = e => {
-    const { password, confirmPassword } = state.data;
+    const { password } = state.data;
     if (confirmPassword.length > 1 || password.length > 1) {
       if (e.target.value !== password && e.target.value !== confirmPassword) {
         setvalidationPass(false);
@@ -55,20 +118,10 @@ export default function Register() {
         [e.target.name]: e.target.value
       }
     });
-
-    console.log(state);
   };
 
-  const redirectRegister = () => {
-    if (redirect) {
-      return (
-        <Redirect
-          to={{
-            pathname: "/"
-          }}
-        />
-      );
-    }
+  const onChangeCps = e => {
+    setconfirmPassword(e.target.value);
   };
 
   const redir = () => {
@@ -77,12 +130,15 @@ export default function Register() {
 
   return (
     <React.Fragment>
+    {switchTogle.open ? <LinearProgress /> : null}
       <Container maxWidth="xs">
         <CssBaseline />
         {redirectRegister()}
+        {successRegister()}
+        
         <div className={classes.paper}>
           <h1>Register</h1>
-          <form className={classes.form}>
+          <form className={classes.form} onSubmit={register}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -143,10 +199,10 @@ export default function Register() {
               name="confirmPassword"
               type="password"
               autoComplete="new-password"
-              defaultValue={state.confirmPassword}
+              defaultValue={confirmPassword}
               onChange={e => {
                 validatePassFn(e);
-                handleChange(e);
+                onChangeCps(e);
               }}
             />
             <Button
@@ -165,6 +221,36 @@ export default function Register() {
                 </Link>
               </Grid>
             </Grid>
+
+            <Snackbar
+              className="snackSuccess"
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right"
+              }}
+              open={switchTogle.open}
+              autoHideDuration={6000}
+              onClose={handleClose}
+              ContentProps={{
+                "aria-describedby": "message-id"
+              }}
+              message={
+                <span id="message-id">
+                  <CheckCircleIcon /> Creating Account...
+                </span>
+              }
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="close"
+                  color="inherit"
+                  // className={classes.close}
+                  onClick={handleClose}
+                >
+                  <CloseIcon />
+                </IconButton>
+              ]}
+            />
           </form>
         </div>
       </Container>

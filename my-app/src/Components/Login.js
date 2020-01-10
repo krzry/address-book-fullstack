@@ -1,45 +1,69 @@
 import React, { useState, useEffect } from "react";
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import { Redirect } from 'react-router-dom'
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import { useHistory, Redirect } from "react-router-dom";
+import axios from "axios";
+import MuiAlert from "@material-ui/lab/Alert";
 
-
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.secondary.main
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(3, 0, 2)
   },
+  width: {
+    width: "100%",
+    marginTop: theme.spacing(2)
+  }
 }));
 
 export default function Login() {
+  const history = useHistory();
   const classes = useStyles();
-  const [redirect, setRedirect] = useState(false)
-  
+  const [redirect, setRedirect] = useState(false);
+  const [redirectHome, setRedirectHome] = useState(false);
+  const [valid, setValid] = useState(null);
+  const [state, setState] = useState({
+    data: {
+      username: "",
+      password: ""
+    }
+  });
+
+  // useEffect(() => {
+  //   if (!localStorage.getItem("token")) {
+  //     history.push("/home");
+  //   } else {
+  //     history.push("/");
+  //   }
+  // }, []);
+
   const redirectRegister = () => {
     if (redirect) {
       return (
@@ -49,34 +73,52 @@ export default function Login() {
           }}
         />
       );
+    } else if (redirectHome) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/home"
+          }}
+        />
+      );
     }
   };
-  
-  const redir = () =>{
-    setRedirect(true)
-  }
+
+  const redirRegister = () => {
+    setRedirect(true);
+  };
 
   const loginFn = e => {
     e.preventDefault();
-    setRedirect(true)
-    // axios({
-    //   method: "post",
-    //   url: `http://localhost:4000/login`,
-    //   data: this.state.data
-    // })
-    //   .then(data => {
-    //     if (data.status === 200) {
-    //       localStorage.setItem("accessToken", data.data.accessToken);
-    //       this.setState({
-    //         ...this.state,
-    //         redirect: true
-    //       });
-    //     } else {
-    //       console.log("error");
-    //     }
-    //   })
+    axios({
+      method: "post",
+      url: `http://localhost:3003/api/login`,
+      data: state.data
+    })
+      .then(data => {
+        if (data.status === 200) {
+          localStorage.setItem("accessToken", data.data.token);
+          setRedirectHome(true);
+          setValid(null);
+          console.log(data);
+        } else {
+          console.log("error");
+        }
+      })
 
-    //   .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        setValid(true);
+      });
+  };
+
+  const handleChange = e => {
+    setState({
+      data: {
+        ...state.data,
+        [e.target.name]: e.target.value
+      }
+    });
   };
 
   return (
@@ -90,6 +132,11 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
+        {valid ? (
+          <Alert severity="error" className={classes.width}>
+            Invalid login details!
+          </Alert>
+        ) : null}
         <form className={classes.form} onSubmit={loginFn} noValidate>
           <TextField
             variant="outlined"
@@ -100,6 +147,8 @@ export default function Login() {
             name="username"
             autoComplete="username"
             autoFocus
+            onChange={e => handleChange(e)}
+            defaultValue={state.data.password}
           />
           <TextField
             variant="outlined"
@@ -111,6 +160,8 @@ export default function Login() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={e => handleChange(e)}
+            defaultValue={state.data.username}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -127,7 +178,7 @@ export default function Login() {
           </Button>
           <Grid container>
             <Grid item>
-              <Link onClick={redir} variant="body2">
+              <Link onClick={redirRegister} variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
