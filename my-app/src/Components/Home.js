@@ -7,17 +7,41 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import Button from "@material-ui/core/Button";
+
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import Avatar from "@material-ui/core/Avatar";
+import { deepOrange } from "@material-ui/core/colors";
+
+
 
 import { Redirect, useHistory } from "react-router-dom";
 import axios from "axios";
+import FullDialog from './HomeComps/FullDialog'
 
 const useStyles = makeStyles(theme => ({
+  absolute: {
+    position: "absolute",
+    bottom: theme.spacing(2),
+    right: theme.spacing(3)
+  },
+  rootButton: {
+    display: "flex",
+    "& > *": {
+      margin: theme.spacing(1)
+    }
+  },
+  orange: {
+    color: theme.palette.getContrastText(deepOrange[500]),
+    backgroundColor: deepOrange[500]
+  },
   root: {
     flexGrow: 1
   },
   paper: {
     padding: theme.spacing(2),
-    textAlign: "center",
+    textAlign: "right",
     color: theme.palette.text.secondary
   },
   header: {
@@ -40,11 +64,22 @@ export default function Home() {
   const classes = useStyles();
   const history = useHistory();
 
+ 
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const [redirect, setRedirect] = useState(false);
   const logoutFn = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("currentID");
     setRedirect(true);
+    setAnchorEl(null);
   };
   const renderRedirect = () => {
     if (redirect) {
@@ -59,6 +94,7 @@ export default function Home() {
   };
 
   const [profileData, setProfileData] = useState([]);
+  const [initial, setInitial] = useState({ first: "", last: "" });
   useEffect(() => {
     if (!localStorage.getItem("accessToken")) {
       history.push("/");
@@ -72,6 +108,11 @@ export default function Home() {
       })
         .then(data => {
           setProfileData(data.data);
+          const firs = data.data.firstname;
+          const las = data.data.lastname;
+          const first = firs.substring(0, 1);
+          const last = las.substring(0, 1);
+          setInitial({ first: first, last: last });
         })
 
         .catch(err => {
@@ -89,17 +130,29 @@ export default function Home() {
           <Typography variant="h6" color="inherit" noWrap>
             Address Book
           </Typography>
-          <Typography variant="h6" color="inherit" noWrap>
-            Hi {profileData.firstname}!
-          </Typography>
-          <Typography
-            variant="h6"
-            color="inherit"
-            noWrap
-            onClick={() => logoutFn()}
+
+          <Button
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleClick}
           >
-            Logout
-          </Typography>
+            <Avatar className={classes.orange}>
+              {initial.first}
+              {initial.last}
+            </Avatar>
+          </Button>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem disabled>
+              Logged in as {profileData.firstname} {profileData.lastname}
+            </MenuItem>
+            <MenuItem onClick={() => logoutFn()}>Logout</MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
       <main>
@@ -129,6 +182,8 @@ export default function Home() {
           </Container>
         </div>
       </main>
+      <FullDialog  />
+      
     </React.Fragment>
   );
 }

@@ -1,9 +1,11 @@
 const express = require('express');
 const massive = require("massive");
-const users = require('./Controllers/Users');
 const secret = require("../secret");
 const jwt = require("jsonwebtoken");
 const cors =require('cors')
+//IMPORTS
+const users = require('./Controllers/Users');
+const contacts = require('./Controllers/Contacts')
 
 massive({
   host: "localhost",
@@ -18,6 +20,9 @@ massive({
   app.use(cors())
   app.use(express.json());
   
+  //CONTACTS
+  app.post('/api/contacts', contacts.create);
+  app.get('/api/users/:id/contacts', contacts.list)
   //USERS
   app.get('/api/users', users.list)
   app.post("/api/users", users.create);
