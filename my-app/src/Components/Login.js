@@ -56,13 +56,13 @@ export default function Login() {
     }
   });
 
-  // useEffect(() => {
-  //   if (!localStorage.getItem("token")) {
-  //     history.push("/home");
-  //   } else {
-  //     history.push("/");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!localStorage.getItem("accessToken")) {
+      history.push("/");
+    } else {
+      history.push("/home");
+    }
+  }, [history]);
 
   const redirectRegister = () => {
     if (redirect) {
@@ -98,9 +98,9 @@ export default function Login() {
       .then(data => {
         if (data.status === 200) {
           localStorage.setItem("accessToken", data.data.token);
+          localStorage.setItem("currentID", data.data.id);
           setRedirectHome(true);
           setValid(null);
-          console.log(data);
         } else {
           console.log("error");
         }
