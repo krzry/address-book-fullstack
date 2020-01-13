@@ -1,24 +1,25 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Link from "@material-ui/core/Link";
 
-import { Redirect,useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import axios from "axios";
 
-
-
 const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: "center",
+    color: theme.palette.text.secondary
+  },
   header: {
     display: "flex",
     justifyContent: "space-between"
@@ -28,13 +29,12 @@ const useStyles = makeStyles(theme => ({
   },
   heroContent: {
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6)
+    padding: theme.spacing(3, 0, 6)
   },
   heroButtons: {
     marginTop: theme.spacing(4)
   }
 }));
-
 
 export default function Home() {
   const classes = useStyles();
@@ -58,27 +58,26 @@ export default function Home() {
     }
   };
 
-  const [profileData, setProfileData] = useState([])
+  const [profileData, setProfileData] = useState([]);
   useEffect(() => {
     if (!localStorage.getItem("accessToken")) {
       history.push("/");
     } else {
       history.push("/home");
-      
-      const id = localStorage.getItem("currentID")
+
+      const id = localStorage.getItem("currentID");
       axios({
         method: "get",
-        url: `http://localhost:3003/api/users/${id}/profile`,
+        url: `http://localhost:3003/api/users/${id}/profile`
       })
         .then(data => {
-          setProfileData(data.data)
+          setProfileData(data.data);
         })
-  
+
         .catch(err => {
           console.log(err);
         });
-    };
-    
+    }
   }, [history]);
 
   return (
@@ -106,37 +105,24 @@ export default function Home() {
       <main>
         {/* Hero unit */}
         <div className={classes.heroContent}>
-          <Container maxWidth="sm">
-            <Typography
-              component="h1"
-              variant="h2"
-              align="center"
-              color="textPrimary"
-              gutterBottom
-            >
-              Album layout
-            </Typography>
-            <Typography
-              variant="h5"
-              align="center"
-              color="textSecondary"
-              paragraph
-            >
-              Something short and leading about the collection below—its
-              contents, the creator, etc. Make it short and sweet, but not too
-              short so folks don&apos;t simply skip over it entirely.
-            </Typography>
-            <div className={classes.heroButtons}>
-              <Grid container spacing={2} justify="center">
-                <Grid item>
-                  <Button variant="contained" color="primary">
-                    Main call to action
-                  </Button>
+          <Container maxWidth="xl">
+            <div className={classes.root}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Paper className={classes.paper}>xs=12</Paper>
                 </Grid>
-                <Grid item>
-                  <Button variant="outlined" color="primary">
-                    Secondary action
-                  </Button>
+                <Grid item xs={12} sm={4}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <Paper className={classes.paper}>xs=12 sm=6</Paper>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Paper className={classes.paper}>xs=12 sm=6</Paper>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} sm={8}>
+                  <Paper className={classes.paper}>xs=12 sm=6</Paper>
                 </Grid>
               </Grid>
             </div>
