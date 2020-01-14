@@ -8,29 +8,23 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Avatar from "@material-ui/core/Avatar";
 import { deepOrange } from "@material-ui/core/colors";
 
-
-
 import { Redirect, useHistory } from "react-router-dom";
 import axios from "axios";
-import FullDialog from './HomeComps/FullDialog'
+// COMPONENTS
+import FullDialog from "./HomeComps/FullDialog";
+import ContactsTable from "./HomeComps/ContactsTable";
 
 const useStyles = makeStyles(theme => ({
-  absolute: {
-    position: "absolute",
-    bottom: theme.spacing(2),
-    right: theme.spacing(3)
-  },
-  rootButton: {
-    display: "flex",
-    "& > *": {
-      margin: theme.spacing(1)
-    }
+  navBar: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   orange: {
     color: theme.palette.getContrastText(deepOrange[500]),
@@ -54,17 +48,12 @@ const useStyles = makeStyles(theme => ({
   heroContent: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(3, 0, 6)
-  },
-  heroButtons: {
-    marginTop: theme.spacing(4)
   }
 }));
 
 export default function Home() {
   const classes = useStyles();
   const history = useHistory();
-
- 
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = event => {
@@ -119,7 +108,29 @@ export default function Home() {
           console.log(err);
         });
     }
+    fetch()
   }, [history]);
+
+
+  const [data, setData] = useState([])
+  const fetch = () =>{
+    const id = localStorage.getItem("currentID");
+    axios({
+      method: "get",
+      url: `http://localhost:3003/api/users/${id}/contacts`
+    })
+      .then(data => {
+        if (data.status === 200) {
+          setData(data.data);
+        } else {
+          console.log("error");
+        }
+      })
+
+      .catch(err => {
+        console.log(err);
+      });
+  }
 
   return (
     <React.Fragment>
@@ -158,11 +169,19 @@ export default function Home() {
       <main>
         {/* Hero unit */}
         <div className={classes.heroContent}>
-          <Container maxWidth="xl">
+          <Container maxWidth="lg">
             <div className={classes.root}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Paper className={classes.paper}>xs=12</Paper>
+              <Grid container spacing={1}>
+                <Grid item xs={12} className={classes.navBar}>
+                   <h1><PeopleAltIcon /> Contacts</h1>
+                   {/* FULL DIALOG */}
+                  <FullDialog fetch={fetch} />
+                </Grid>
+
+                <Grid item xs={12} sm={8}>
+                  {/* CONTACTS TABLE */}
+                  <ContactsTable data={data} />
+                  {/* END TABLE */}
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <Grid container spacing={2}>
@@ -174,16 +193,11 @@ export default function Home() {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} sm={8}>
-                  <Paper className={classes.paper}>xs=12 sm=6</Paper>
-                </Grid>
               </Grid>
             </div>
           </Container>
         </div>
       </main>
-      <FullDialog  />
-      
     </React.Fragment>
   );
 }

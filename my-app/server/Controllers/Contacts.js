@@ -9,6 +9,7 @@ function list(req, res) {
       res.status(500).end();
     });
 }
+
 function create(req, res) {
   const db = req.app.get("db");
 
@@ -27,7 +28,7 @@ function create(req, res) {
   } = req.body;
 
   db.contacts
-    .insert({
+    .save({
       userId: userId,
       first_name: first_name,
       last_name: last_name,
