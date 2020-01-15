@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+
 
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -17,14 +14,22 @@ import { deepOrange } from "@material-ui/core/colors";
 
 import { Redirect, useHistory } from "react-router-dom";
 import axios from "axios";
+
 // COMPONENTS
-import FullDialog from "./HomeComps/FullDialog";
-import ContactsTable from "./HomeComps/ContactsTable";
+import Drawer from './HomeComps/Drawer'
+import Groups from './Groups'
+import Contacts from './Contacts'
+import jwt from "jwt-decode";
+
 
 const useStyles = makeStyles(theme => ({
-  navBar: {
+  drawer: {
     display: 'flex',
-    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  navBar: {
+    display: "flex",
+    justifyContent: "space-between"
   },
   orange: {
     color: theme.palette.getContrastText(deepOrange[500]),
@@ -62,6 +67,11 @@ export default function Home() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  //   var decoded = jwt(localStorage.getItem("accessToken"));
+  // console.log(decoded);
+
+  const [toggle, setToggle] = useState(false)
 
   const [redirect, setRedirect] = useState(false);
   const logoutFn = () => {
@@ -108,12 +118,11 @@ export default function Home() {
           console.log(err);
         });
     }
-    fetch()
+    fetch();
   }, [history]);
 
-
-  const [data, setData] = useState([])
-  const fetch = () =>{
+  const [data, setData] = useState([]);
+  const fetch = () => {
     const id = localStorage.getItem("currentID");
     axios({
       method: "get",
@@ -130,7 +139,7 @@ export default function Home() {
       .catch(err => {
         console.log(err);
       });
-  }
+  };
 
   return (
     <React.Fragment>
@@ -138,9 +147,13 @@ export default function Home() {
       {renderRedirect()}
       <AppBar position="relative">
         <Toolbar className={classes.header}>
-          <Typography variant="h6" color="inherit" noWrap>
-            Address Book
-          </Typography>
+          <div className={classes.drawer}>
+            
+          <Drawer setToggle={setToggle} />
+            <Typography variant="h6" color="inherit" noWrap>
+              Address Book
+            </Typography>
+          </div>
 
           <Button
             aria-controls="simple-menu"
@@ -169,33 +182,9 @@ export default function Home() {
       <main>
         {/* Hero unit */}
         <div className={classes.heroContent}>
-          <Container maxWidth="lg">
-            <div className={classes.root}>
-              <Grid container spacing={1}>
-                <Grid item xs={12} className={classes.navBar}>
-                   <h1><PeopleAltIcon /> Contacts</h1>
-                   {/* FULL DIALOG */}
-                  <FullDialog fetch={fetch} />
-                </Grid>
-
-                <Grid item xs={12} sm={8}>
-                  {/* CONTACTS TABLE */}
-                  <ContactsTable data={data} />
-                  {/* END TABLE */}
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <Paper className={classes.paper}>xs=12 sm=6</Paper>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Paper className={classes.paper}>xs=12 sm=6</Paper>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </div>
-          </Container>
+          {toggle ? <Groups data={data} fetch={fetch} /> : <Contacts data={data} fetch={fetch} /> }
+          
+          
         </div>
       </main>
     </React.Fragment>

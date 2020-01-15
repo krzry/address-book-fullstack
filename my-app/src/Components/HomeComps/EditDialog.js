@@ -7,30 +7,26 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import GroupAddIcon from "@material-ui/icons/GroupAdd";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import Grid from "@material-ui/core/Grid";
-import axios from 'axios';
-
 import Fab from "@material-ui/core/Fab";
-import Tooltip from "@material-ui/core/Tooltip";
-
+import EditIcon from "@material-ui/icons/Edit";
+import axios from "axios";
+//ICONS
+import InputAdornment from "@material-ui/core/InputAdornment";
+import PersonIcon from "@material-ui/icons/Person";
+import CallIcon from "@material-ui/icons/Call";
+import WorkIcon from "@material-ui/icons/Work";
+import HomeIcon from "@material-ui/icons/Home";
+import EmailIcon from "@material-ui/icons/Email";
+import FlagIcon from "@material-ui/icons/Flag";
+import LocationCityIcon from "@material-ui/icons/LocationCity";
 const useStyles = makeStyles(theme => ({
-  fab: {
-    float: "right",
-    marginLeft: theme.spacing(1)
-  },
   root: {
     flexGrow: 1
-  },
-  paper: {
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary
   }
 }));
 
-export default function ResponsiveDialog({fetch}) {
+export default function EditDialog({ fetch, data }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
@@ -48,16 +44,16 @@ export default function ResponsiveDialog({fetch}) {
   const [state, setState] = useState({
     data: {
       userId: id,
-      first_name: "",
-      last_name: "",
-      home_phone: "",
-      mobile_phone: "",
-      work_phone: "",
-      email: "",
-      city: "",
-      state_or_province: "",
-      postal_code: "",
-      country: ""
+      first_name: data.first_name,
+      last_name: data.last_name,
+      home_phone: data.home_phone,
+      mobile_phone: data.mobile_phone,
+      work_phone: data.work_phone,
+      email: data.email,
+      city: data.city,
+      state_or_province: data.state_or_province,
+      postal_code: data.postal_code,
+      country: data.country
     }
   });
 
@@ -68,35 +64,18 @@ export default function ResponsiveDialog({fetch}) {
         [e.target.name]: e.target.value
       }
     });
-    console.log(state.data);
   };
 
-  const addContact = e => {
+  const editContact = e => {
     e.preventDefault();
     axios({
-      method: "post",
-      url: `http://localhost:3003/api/contacts`,
+      method: "put",
+      url: `http://localhost:3003/api/contacts/${data.id}`,
       data: state.data
     })
       .then(data => {
         setOpen(false);
-        fetch()
-        setState({
-          data: {
-            userId: id,
-            first_name: "",
-            last_name: "",
-            home_phone: "",
-            mobile_phone: "",
-            work_phone: "",
-            email: "",
-            city: "",
-            state_or_province: "",
-            postal_code: "",
-            country: ""
-          }
-        })
-        console.log(data);
+        fetch();
       })
       .catch(err => console.log(err));
   };
@@ -109,14 +88,12 @@ export default function ResponsiveDialog({fetch}) {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
-          {"Add New Contact"}
-        </DialogTitle>
-        <form onSubmit={addContact}>
+        <DialogTitle id="responsive-dialog-title">{"Edit Contact"}</DialogTitle>
+        <form onSubmit={editContact}>
           <DialogContent>
             <div className={classes.root}>
               <Grid container spacing={1}>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -125,11 +102,18 @@ export default function ResponsiveDialog({fetch}) {
                     label="First Name"
                     name="first_name"
                     autoFocus
-                    defaultValue={state.data.first_name}
+                    defaultValue={data.first_name}
                     onChange={e => handleChange(e)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <PersonIcon />
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -137,8 +121,15 @@ export default function ResponsiveDialog({fetch}) {
                     fullWidth
                     label="Last Name"
                     name="last_name"
-                    defaultValue={state.data.last_name}
+                    defaultValue={data.last_name}
                     onChange={e => handleChange(e)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <PersonIcon />
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 </Grid>
 
@@ -150,11 +141,19 @@ export default function ResponsiveDialog({fetch}) {
                     fullWidth
                     label="Mobile Phone"
                     name="mobile_phone"
-                    defaultValue={state.data.mobile_phone}
+                    type="number"
+                    defaultValue={data.mobile_phone}
                     onChange={e => handleChange(e)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <CallIcon />
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -162,11 +161,19 @@ export default function ResponsiveDialog({fetch}) {
                     fullWidth
                     label="Home Phone"
                     name="home_phone"
-                    defaultValue={state.data.home_phone}
+                    type="number"
+                    defaultValue={data.home_phone}
                     onChange={e => handleChange(e)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <HomeIcon />
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -174,8 +181,16 @@ export default function ResponsiveDialog({fetch}) {
                     fullWidth
                     label="Work Phone"
                     name="work_phone"
-                    defaultValue={state.data.work_phone}
+                    type="number"
+                    defaultValue={data.work_phone}
                     onChange={e => handleChange(e)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <WorkIcon />
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -187,11 +202,18 @@ export default function ResponsiveDialog({fetch}) {
                     label="E-mail"
                     name="email"
                     type="email"
-                    defaultValue={state.data.email}
+                    defaultValue={data.email}
                     onChange={e => handleChange(e)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <EmailIcon />
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -199,11 +221,18 @@ export default function ResponsiveDialog({fetch}) {
                     fullWidth
                     label="Country"
                     name="country"
-                    defaultValue={state.data.country}
+                    defaultValue={data.country}
                     onChange={e => handleChange(e)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <FlagIcon />
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -211,11 +240,18 @@ export default function ResponsiveDialog({fetch}) {
                     fullWidth
                     label="State or province"
                     name="state_or_province"
-                    defaultValue={state.data.state_or_province}
+                    defaultValue={data.state_or_province}
                     onChange={e => handleChange(e)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LocationCityIcon />
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -223,12 +259,19 @@ export default function ResponsiveDialog({fetch}) {
                     fullWidth
                     label="City"
                     name="city"
-                    defaultValue={state.data.city}
+                    defaultValue={data.city}
                     onChange={e => handleChange(e)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LocationCityIcon />
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 </Grid>
 
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -236,8 +279,16 @@ export default function ResponsiveDialog({fetch}) {
                     fullWidth
                     label="Postal Code"
                     name="postal_code"
-                    defaultValue={state.data.postal_code}
+                    type="number"
+                    defaultValue={data.postal_code}
                     onChange={e => handleChange(e)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <PersonIcon />
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 </Grid>
               </Grid>
@@ -253,20 +304,15 @@ export default function ResponsiveDialog({fetch}) {
           </DialogActions>
         </form>
       </Dialog>
-      <Tooltip title="Add contact" aria-label="add">
-        <Fab
-          color="secondary"
-          className={classes.fab}
-          onClick={handleClickOpen}
-        >
-          <PersonAddIcon />
-        </Fab>
-      </Tooltip>
-      <Tooltip title="Add group" aria-label="add">
-        <Fab color="primary" className={classes.fab} onClick={handleClickOpen}>
-          <GroupAddIcon />
-        </Fab>
-      </Tooltip>
+      <Fab
+        color="primary"
+        aria-label="edit"
+        size="small"
+        className={classes.fab}
+        onClick={handleClickOpen}
+      >
+        <EditIcon />
+      </Fab>
     </div>
   );
 }

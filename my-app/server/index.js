@@ -23,6 +23,7 @@ massive({
   //CONTACTS
   app.post('/api/contacts', contacts.create);
   app.get('/api/users/:id/contacts', contacts.list)
+  app.put('/api/contacts/:id', contacts.update)
   //USERS
   app.get('/api/users', users.list)
   app.post("/api/users", users.create);

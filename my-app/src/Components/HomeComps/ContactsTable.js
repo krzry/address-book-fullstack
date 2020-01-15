@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -8,37 +8,39 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import axios from "axios";
-import Fab from "@material-ui/core/Fab";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import Avatar from "@material-ui/core/Avatar";
+import ViewDialog from "./ViewDialog";
+import EditDialog from "./EditDialog";
+import DeleteDialog from "./DeleteDialog";
 import Chip from "@material-ui/core/Chip";
 
 const useStyles = makeStyles(theme => ({
-  fab: {
-    margin: theme.spacing(1)
+  view: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start'
+  },
+  buttons: {
+    display: "flex"
   },
   root: {
     width: "100%"
   },
   container: {
-    maxHeight: 440,
-    minHeight: 440
+    maxHeight: 600,
+    minHeight: 600
   }
 }));
 
-export default function ContactsTable({ data }) {
+export default function ContactsTable({ data, fetch }) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
 
   const columns = [
     { id: "Name", label: "Name", minWidth: 50 },
     { id: "buttons", label: "Buttons", minWidth: 50 }
   ];
-
- 
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -47,10 +49,6 @@ export default function ContactsTable({ data }) {
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(+event.target.value);
     setPage(0);
-  };
-
-  const handleView = () => {
-    console.log("object");
   };
 
   return (
@@ -64,6 +62,7 @@ export default function ContactsTable({ data }) {
                   key={column.id}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
+                  sort="true"
                 >
                   {column.label}
                 </TableCell>
@@ -77,36 +76,23 @@ export default function ContactsTable({ data }) {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                     <TableCell key={row.id}>
-                      <Chip
-                        variant="outlined"
-                        onClick={handleView}
-                        color="primary"
-                        label={`${row.first_name} ${row.last_name}`}
-                        avatar={
-                          <Avatar>{`${row.first_name.substring(
-                            0,
-                            1
-                          )}${row.last_name.substring(0, 1)}`}</Avatar>
-                        }
-                      />
+                      <div className={classes.view}>
+                        {/* VIEW DIALOG */}
+                        <ViewDialog data={row} />
+                        <Chip label={row.mobile_phone} variant="outlined" />
+                        {/* END DIALOG */}
+                      </div>
                     </TableCell>
                     <TableCell>
-                      <Fab
-                        color="primary"
-                        aria-label="edit"
-                        size="small"
-                        className={classes.fab}
-                      >
-                        <EditIcon />
-                      </Fab>
-                      <Fab
-                        color="secondary"
-                        aria-label="edit"
-                        size="small"
-                        className={classes.fab}
-                      >
-                        <DeleteOutlineIcon />
-                      </Fab>
+                      <div className={classes.buttons}>
+                        {/* EDIT DIALOG */}
+                        <EditDialog data={row} fetch={fetch} />
+                        {/* END EDIT DIALOG */}
+
+                        {/* DELETE DIALOG */}
+                        <DeleteDialog data={row} />
+                        {/* END DELETE DIALOG */}
+                      </div>
                     </TableCell>
                   </TableRow>
                 );
