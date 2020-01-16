@@ -20,7 +20,12 @@ import HomeIcon from "@material-ui/icons/Home";
 import EmailIcon from "@material-ui/icons/Email";
 import FlagIcon from "@material-ui/icons/Flag";
 import LocationCityIcon from "@material-ui/icons/LocationCity";
+import orange from "@material-ui/core/colors/orange";
+
 const useStyles = makeStyles(theme => ({
+  button:{
+    backgroundColor: orange[500]
+  },
   root: {
     flexGrow: 1
   }
@@ -88,7 +93,7 @@ export default function EditDialog({ fetch, data }) {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">{"Edit Contact"}</DialogTitle>
+        <DialogTitle id="responsive-dialog-title" className={classes.button} >{"Edit Contact"}</DialogTitle>
         <form onSubmit={editContact}>
           <DialogContent>
             <div className={classes.root}>

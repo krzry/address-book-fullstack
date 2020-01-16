@@ -14,6 +14,8 @@ import DeleteDialog from "./DeleteDialog";
 import Chip from "@material-ui/core/Chip";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
 import Button from "@material-ui/core/Button";
+import { useTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const useStyles = makeStyles(theme => ({
   view: {
@@ -38,6 +40,10 @@ export default function ContactsTable({ data, fetch, sortFirst, sortLast }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
+  // USE MEDIAQUERY
+  const theme = useTheme();
+
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -47,17 +53,15 @@ export default function ContactsTable({ data, fetch, sortFirst, sortLast }) {
     setPage(0);
   };
 
-
   const [toggle, setToggle] = useState(false);
   const handleSortLast = () => {
-    if(toggle){
+    if (toggle) {
       setToggle(false);
       sortFirst();
-    }else{
-      setToggle(true)
-      sortLast()
+    } else {
+      setToggle(true);
+      sortLast();
     }
-    
   };
   return (
     <Paper className={classes.root}>
@@ -67,9 +71,6 @@ export default function ContactsTable({ data, fetch, sortFirst, sortLast }) {
             <TableRow>
               <TableCell id="first_name" style={{ minWidth: 50 }}>
                 First Name
-              </TableCell>
-              <TableCell id="last_name" style={{ minWidth: 50 }}>
-                Last Name
                 <Button onClick={handleSortLast}>
                   <ImportExportIcon />
                 </Button>
@@ -77,9 +78,11 @@ export default function ContactsTable({ data, fetch, sortFirst, sortLast }) {
               <TableCell id="mobile_no" style={{ minWidth: 50 }}>
                 Mobile No.
               </TableCell>
-              <TableCell id="buttons" style={{ minWidth: 50 }}>
-                Buttons
-              </TableCell>
+              {!matches ? null : (
+                <TableCell id="buttons" style={{ minWidth: 50 }}>
+                  Buttons
+                </TableCell>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -91,28 +94,31 @@ export default function ContactsTable({ data, fetch, sortFirst, sortLast }) {
                     <TableCell key={row.id}>
                       <div className={classes.view}>
                         {/* VIEW DIALOG */}
-                        <ViewDialog data={row} />
+                        <ViewDialog
+                          data={row}
+                          matches={matches}
+                          fetch={fetch}
+                        />
 
                         {/* END DIALOG */}
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Chip label={row.last_name} variant="outlined" />
-                    </TableCell>
-                    <TableCell>
                       <Chip label={row.mobile_phone} variant="outlined" />
                     </TableCell>
-                    <TableCell>
-                      <div className={classes.buttons}>
-                        {/* EDIT DIALOG */}
-                        <EditDialog data={row} fetch={fetch} />
-                        {/* END EDIT DIALOG */}
+                    {!matches ? null : (
+                      <TableCell>
+                        <div className={classes.buttons}>
+                          {/* EDIT DIALOG */}
+                          <EditDialog data={row} fetch={fetch} />
+                          {/* END EDIT DIALOG */}
 
-                        {/* DELETE DIALOG */}
-                        <DeleteDialog data={row} fetch={fetch} />
-                        {/* END DELETE DIALOG */}
-                      </div>
-                    </TableCell>
+                          {/* DELETE DIALOG */}
+                          <DeleteDialog data={row} fetch={fetch} />
+                          {/* END DELETE DIALOG */}
+                        </div>
+                      </TableCell>
+                    )}
                   </TableRow>
                 );
               })}

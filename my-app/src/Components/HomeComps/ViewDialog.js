@@ -3,13 +3,13 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Chip from "@material-ui/core/Chip";
+import teal from "@material-ui/core/colors/teal";
 
 //ICONS
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -20,36 +20,58 @@ import HomeIcon from "@material-ui/icons/Home";
 import EmailIcon from "@material-ui/icons/Email";
 import FlagIcon from "@material-ui/icons/Flag";
 import LocationCityIcon from "@material-ui/icons/LocationCity";
+import Typography from "@material-ui/core/Typography";
+
+//COMPONENT
+import EditDialog from "./EditDialog";
 
 const useStyles = makeStyles(theme => ({
+  title: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: theme.spacing(2, 2, 1),
+    backgroundColor: teal[500],
+    color: "white"
+  },
   root: {
     flexGrow: 1
   }
 }));
 
-export default function ViewDialog({ data }) {
+export default function ViewDialog({ data, fetch, matches }) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [openView, setOpenView] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setOpenView(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenView(false);
   };
+
+  const handleDelete = () =>{
+    console.log("hello")
+  }
 
   return (
     <div>
       <Dialog
         fullScreen={fullScreen}
-        open={open}
+        open={openView}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">{"View Contact"}</DialogTitle>
+        <div className={classes.title}>
+          <Typography variant="button" display="block" gutterBottom>
+            View Contact
+          </Typography>
+          {!matches ? <EditDialog data={data} fetch={fetch} setOpenView={setOpenView} /> : null}
+          
+        </div>
         <form>
           <DialogContent>
             <div className={classes.root}>
@@ -62,7 +84,6 @@ export default function ViewDialog({ data }) {
                     fullWidth
                     label="First Name"
                     name="first_name"
-                    autoFocus
                     defaultValue={data.first_name}
                     InputProps={{
                       readOnly: true,
@@ -261,8 +282,9 @@ export default function ViewDialog({ data }) {
       <Chip
         variant="outlined"
         onClick={handleClickOpen}
+        onDelete={!matches ? handleDelete : null}
         color="primary"
-        label={data.first_name}
+        label={`${data.first_name} ${data.last_name}`}
         avatar={<Avatar>{data.first_name.substring(0, 1)}</Avatar>}
       />
     </div>
