@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -10,7 +10,9 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Chip from "@material-ui/core/Chip";
 import teal from "@material-ui/core/colors/teal";
-
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import axios from "axios";
 //ICONS
 import InputAdornment from "@material-ui/core/InputAdornment";
 import PersonIcon from "@material-ui/icons/Person";
@@ -53,9 +55,30 @@ export default function ViewDialog({ data, fetch, matches }) {
     setOpenView(false);
   };
 
-  const handleDelete = () =>{
-    console.log("hello")
-  }
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleDelete = () => {
+    axios({
+      method: "delete",
+      url: `http://localhost:3003/api/contacts/${data.id}`
+    })
+      .then(data => {
+        fetch();
+        setOpenDialog(false);
+      })
+
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   return (
     <div>
@@ -69,8 +92,9 @@ export default function ViewDialog({ data, fetch, matches }) {
           <Typography variant="button" display="block" gutterBottom>
             View Contact
           </Typography>
-          {!matches ? <EditDialog data={data} fetch={fetch} setOpenView={setOpenView} /> : null}
-          
+          {!matches ? (
+            <EditDialog data={data} fetch={fetch} setOpenView={setOpenView} />
+          ) : null}
         </div>
         <form>
           <DialogContent>
@@ -282,11 +306,34 @@ export default function ViewDialog({ data, fetch, matches }) {
       <Chip
         variant="outlined"
         onClick={handleClickOpen}
-        onDelete={!matches ? handleDelete : null}
+        onDelete={!matches ? handleOpenDialog : null}
         color="primary"
         label={`${data.first_name} ${data.last_name}`}
         avatar={<Avatar>{data.first_name.substring(0, 1)}</Avatar>}
       />
+
+      {/* DELETE DIALOG */}
+      <Dialog
+        fullScreen={fullScreen}
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">
+          {`Are you sure you want to delete ${data.first_name} ${data.last_name}?`}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>You can't revert the changes.</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="primary" autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
