@@ -12,14 +12,14 @@ import Avatar from "@material-ui/core/Avatar";
 import Chip from "@material-ui/core/Chip";
 
 //ICONS
-import InputAdornment from '@material-ui/core/InputAdornment';
-import PersonIcon from '@material-ui/icons/Person';
-import CallIcon from '@material-ui/icons/Call';
-import WorkIcon from '@material-ui/icons/Work';
-import HomeIcon from '@material-ui/icons/Home';
-import EmailIcon from '@material-ui/icons/Email';
-import FlagIcon from '@material-ui/icons/Flag';
-import LocationCityIcon from '@material-ui/icons/LocationCity';
+import InputAdornment from "@material-ui/core/InputAdornment";
+import PersonIcon from "@material-ui/icons/Person";
+import CallIcon from "@material-ui/icons/Call";
+import WorkIcon from "@material-ui/icons/Work";
+import HomeIcon from "@material-ui/icons/Home";
+import EmailIcon from "@material-ui/icons/Email";
+import FlagIcon from "@material-ui/icons/Flag";
+import LocationCityIcon from "@material-ui/icons/LocationCity";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -262,13 +262,8 @@ export default function ViewDialog({ data }) {
         variant="outlined"
         onClick={handleClickOpen}
         color="primary"
-        label={`${data.first_name} ${data.last_name}`}
-        avatar={
-          <Avatar>{`${data.first_name.substring(
-            0,
-            1
-          )}${data.last_name.substring(0, 1)}`}</Avatar>
-        }
+        label={data.first_name}
+        avatar={<Avatar>{data.first_name.substring(0, 1)}</Avatar>}
       />
     </div>
   );

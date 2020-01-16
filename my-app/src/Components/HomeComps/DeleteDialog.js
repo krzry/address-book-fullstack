@@ -3,13 +3,13 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
 import Fab from "@material-ui/core/Fab";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
   fab: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ViewDialog({ fetch, data }) {
+export default function DeleteDialog({ fetch, data }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
@@ -34,146 +34,23 @@ export default function ViewDialog({ fetch, data }) {
     setOpen(false);
   };
 
+  const handleDelete = () => {
+    axios({
+      method: "delete",
+      url: `http://localhost:3003/api/contacts/${data.id}`
+    })
+      .then(data => {
+        fetch();
+        setOpen(false);
+      })
+
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   return (
     <div>
-      <Dialog
-        fullScreen={fullScreen}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="responsive-dialog-title"
-      >
-        <DialogTitle id="responsive-dialog-title">{"Delete Contact"}</DialogTitle>
-        <form>
-          <DialogContent>
-            <div className={classes.root}>
-              <Grid container spacing={1}>
-                <Grid item xs={6} sm={6}>
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="First Name"
-                    name="first_name"
-                    autoFocus
-                    defaultValue={data.first_name}
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6}>
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Last Name"
-                    name="last_name"
-                    defaultValue={data.last_name}
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Mobile Phone"
-                    name="mobile_phone"
-                    defaultValue={data.mobile_phone}
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6}>
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Home Phone"
-                    name="home_phone"
-                    defaultValue={data.home_phone}
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6}>
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Work Phone"
-                    name="work_phone"
-                    defaultValue={data.work_phone}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="E-mail"
-                    name="email"
-                    type="email"
-                    defaultValue={data.email}
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6}>
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Country"
-                    name="country"
-                    defaultValue={data.country}
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6}>
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="State or province"
-                    name="state_or_province"
-                    defaultValue={data.state_or_province}
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6}>
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="City"
-                    name="city"
-                    defaultValue={data.city}
-                  />
-                </Grid>
-
-                <Grid item xs={6} sm={6}>
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Postal Code"
-                    name="postal_code"
-                    defaultValue={data.postal_code}
-                  />
-                </Grid>
-              </Grid>
-            </div>
-          </DialogContent>
-          <DialogActions>
-            <Button color="primary" type="submit">
-              Save
-            </Button>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
       <Fab
         color="secondary"
         aria-label="edit"
@@ -183,6 +60,27 @@ export default function ViewDialog({ fetch, data }) {
       >
         <DeleteOutlineIcon />
       </Fab>
+      <Dialog
+        fullScreen={fullScreen}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">
+          {`Are you sure you want to delete ${data.first_name} ${data.last_name}?`}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>You can't revert the changes.</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="primary" autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

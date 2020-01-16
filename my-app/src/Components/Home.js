@@ -6,7 +6,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 
-
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Avatar from "@material-ui/core/Avatar";
@@ -16,16 +15,15 @@ import { Redirect, useHistory } from "react-router-dom";
 import axios from "axios";
 
 // COMPONENTS
-import Drawer from './HomeComps/Drawer'
-import Groups from './Groups'
-import Contacts from './Contacts'
+import Drawer from "./HomeComps/Drawer";
+import Groups from "./Groups";
+import Contacts from "./Contacts";
 import jwt from "jwt-decode";
-
 
 const useStyles = makeStyles(theme => ({
   drawer: {
-    display: 'flex',
-    alignItems: 'center'
+    display: "flex",
+    alignItems: "center"
   },
   navBar: {
     display: "flex",
@@ -71,7 +69,7 @@ export default function Home() {
   //   var decoded = jwt(localStorage.getItem("accessToken"));
   // console.log(decoded);
 
-  const [toggle, setToggle] = useState(false)
+  const [toggle, setToggle] = useState(false);
 
   const [redirect, setRedirect] = useState(false);
   const logoutFn = () => {
@@ -91,7 +89,7 @@ export default function Home() {
       );
     }
   };
-
+  const [data, setData] = useState([]);
   const [profileData, setProfileData] = useState([]);
   const [initial, setInitial] = useState({ first: "", last: "" });
   useEffect(() => {
@@ -121,12 +119,38 @@ export default function Home() {
     fetch();
   }, [history]);
 
-  const [data, setData] = useState([]);
+  const sortFirst = () => {
+    fetch();
+  };
+
+  const sortLast = () => {
+    fetchDesc();
+  };
+
   const fetch = () => {
     const id = localStorage.getItem("currentID");
     axios({
       method: "get",
-      url: `http://localhost:3003/api/users/${id}/contacts`
+      url: `http://localhost:3003/api/users/${id}/contacts/asc`
+    })
+      .then(data => {
+        if (data.status === 200) {
+          setData(data.data);
+        } else {
+          console.log("error");
+        }
+      })
+
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  const fetchDesc = () => {
+    const id = localStorage.getItem("currentID");
+    axios({
+      method: "get",
+      url: `http://localhost:3003/api/users/${id}/contacts/desc`
     })
       .then(data => {
         if (data.status === 200) {
@@ -148,8 +172,7 @@ export default function Home() {
       <AppBar position="relative">
         <Toolbar className={classes.header}>
           <div className={classes.drawer}>
-            
-          <Drawer setToggle={setToggle} />
+            <Drawer setToggle={setToggle} />
             <Typography variant="h6" color="inherit" noWrap>
               Address Book
             </Typography>
@@ -182,9 +205,16 @@ export default function Home() {
       <main>
         {/* Hero unit */}
         <div className={classes.heroContent}>
-          {toggle ? <Groups data={data} fetch={fetch} /> : <Contacts data={data} fetch={fetch} /> }
-          
-          
+          {toggle ? (
+            <Groups data={data} fetch={fetch} />
+          ) : (
+            <Contacts
+              data={data}
+              fetch={fetch}
+              sortFirst={sortFirst}
+              sortLast={sortLast}
+            />
+          )}
         </div>
       </main>
     </React.Fragment>

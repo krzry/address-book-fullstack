@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -12,12 +12,14 @@ import ViewDialog from "./ViewDialog";
 import EditDialog from "./EditDialog";
 import DeleteDialog from "./DeleteDialog";
 import Chip from "@material-ui/core/Chip";
+import ImportExportIcon from "@material-ui/icons/ImportExport";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(theme => ({
   view: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start'
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start"
   },
   buttons: {
     display: "flex"
@@ -31,16 +33,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ContactsTable({ data, fetch }) {
+export default function ContactsTable({ data, fetch, sortFirst, sortLast }) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-
-  const columns = [
-    { id: "Name", label: "Name", minWidth: 50 },
-    { id: "buttons", label: "Buttons", minWidth: 50 }
-  ];
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -51,22 +47,39 @@ export default function ContactsTable({ data, fetch }) {
     setPage(0);
   };
 
+
+  const [toggle, setToggle] = useState(false);
+  const handleSortLast = () => {
+    if(toggle){
+      setToggle(false);
+      sortFirst();
+    }else{
+      setToggle(true)
+      sortLast()
+    }
+    
+  };
   return (
     <Paper className={classes.root}>
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {columns.map(column => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                  sort="true"
-                >
-                  {column.label}
-                </TableCell>
-              ))}
+              <TableCell id="first_name" style={{ minWidth: 50 }}>
+                First Name
+              </TableCell>
+              <TableCell id="last_name" style={{ minWidth: 50 }}>
+                Last Name
+                <Button onClick={handleSortLast}>
+                  <ImportExportIcon />
+                </Button>
+              </TableCell>
+              <TableCell id="mobile_no" style={{ minWidth: 50 }}>
+                Mobile No.
+              </TableCell>
+              <TableCell id="buttons" style={{ minWidth: 50 }}>
+                Buttons
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -79,9 +92,15 @@ export default function ContactsTable({ data, fetch }) {
                       <div className={classes.view}>
                         {/* VIEW DIALOG */}
                         <ViewDialog data={row} />
-                        <Chip label={row.mobile_phone} variant="outlined" />
+
                         {/* END DIALOG */}
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      <Chip label={row.last_name} variant="outlined" />
+                    </TableCell>
+                    <TableCell>
+                      <Chip label={row.mobile_phone} variant="outlined" />
                     </TableCell>
                     <TableCell>
                       <div className={classes.buttons}>
@@ -90,7 +109,7 @@ export default function ContactsTable({ data, fetch }) {
                         {/* END EDIT DIALOG */}
 
                         {/* DELETE DIALOG */}
-                        <DeleteDialog data={row} />
+                        <DeleteDialog data={row} fetch={fetch} />
                         {/* END DELETE DIALOG */}
                       </div>
                     </TableCell>

@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Groups({data, fetch}) {
+export default function Groups({data, fetch, sortFirst, sortLast}) {
   const classes = useStyles();
   
   return (
@@ -52,7 +52,7 @@ export default function Groups({data, fetch}) {
 
           <Grid item xs={12}>
             {/* CONTACTS TABLE */}
-            <ContactsTable data={data} fetch={fetch} />
+            <ContactsTable data={data} fetch={fetch} sortFirst={sortFirst} sortLast={sortLast}/>
             {/* END TABLE */}
           </Grid>
         </Grid>

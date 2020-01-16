@@ -1,8 +1,28 @@
-function list(req, res) {
+function listAsc(req, res) {
   const db = req.app.get("db");
 
-  db.contacts
-    .find({ userId: req.params.id })
+  db.query(
+    `SELECT *
+  FROM contacts 
+  WHERE "userId" = ${req.params.id} 
+  ORDER BY contacts.first_name ASC`
+  )
+    .then(contact => res.status(200).json(contact))
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    });
+}
+
+function listDesc(req, res) {
+  const db = req.app.get("db");
+
+  db.query(
+    `SELECT *
+  FROM contacts 
+  WHERE "userId" = ${req.params.id} 
+  ORDER BY contacts.last_name ASC`
+  )
     .then(contact => res.status(200).json(contact))
     .catch(err => {
       console.error(err);
@@ -91,8 +111,26 @@ function update(req, res) {
     });
 }
 
+function deleteContact(req, res) {
+  const db = req.app.get("db");
+  
+  db.contacts
+    .destroy({
+      id: req.params.id
+    })
+    .then(() => {
+      res.status(200).send("Contact Deleted");
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).end();
+    });
+}
+
 module.exports = {
   create,
-  list,
-  update
+  listAsc,
+  listDesc,
+  update,
+  deleteContact
 };

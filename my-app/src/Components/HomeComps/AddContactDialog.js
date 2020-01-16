@@ -99,7 +99,6 @@ export default function AddContactDialog({ fetch }) {
             country: ""
           }
         });
-        console.log(data);
       })
       .catch(err => console.log(err));
   };
