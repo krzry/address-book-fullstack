@@ -14,6 +14,9 @@ import { deepOrange } from "@material-ui/core/colors";
 import { Redirect, useHistory } from "react-router-dom";
 import axios from "axios";
 
+import { useTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+
 // COMPONENTS
 import Drawer from "./HomeComps/Drawer";
 import Groups from "./Groups";
@@ -66,6 +69,10 @@ export default function Home() {
     setAnchorEl(null);
   };
 
+  // USE MEDIAQUERY
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
   //   var decoded = jwt(localStorage.getItem("accessToken"));
   // console.log(decoded);
 
@@ -90,6 +97,7 @@ export default function Home() {
     }
   };
   const [data, setData] = useState([]);
+  const [tempData, setTempData] = useState([])
   const [profileData, setProfileData] = useState([]);
   const [initial, setInitial] = useState({ first: "", last: "" });
   useEffect(() => {
@@ -136,6 +144,7 @@ export default function Home() {
       .then(data => {
         if (data.status === 200) {
           setData(data.data);
+          setTempData(data.data)
         } else {
           console.log("error");
         }
@@ -155,6 +164,7 @@ export default function Home() {
       .then(data => {
         if (data.status === 200) {
           setData(data.data);
+          setTempData(data.data)
         } else {
           console.log("error");
         }
@@ -172,7 +182,7 @@ export default function Home() {
       <AppBar position="relative">
         <Toolbar className={classes.header}>
           <div className={classes.drawer}>
-            <Drawer setToggle={setToggle} />
+            <Drawer setToggle={setToggle} fetch={fetch} />
             <Typography variant="h6" color="inherit" noWrap>
               Address Book
             </Typography>
@@ -206,13 +216,17 @@ export default function Home() {
         {/* Hero unit */}
         <div className={classes.heroContent}>
           {toggle ? (
-            <Groups data={data} fetch={fetch} />
+            <Groups tempData={tempData} fetch={fetch} />
           ) : (
             <Contacts
               data={data}
               fetch={fetch}
               sortFirst={sortFirst}
               sortLast={sortLast}
+              setData={setData}
+              tempData={tempData}
+              setTempData={setTempData}
+              matches={matches}
             />
           )}
         </div>

@@ -23,7 +23,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Drawers({setToggle}) {
+export default function Drawers({setToggle, fetch}) {
   const classes = useStyles();
   const [state, setState] = React.useState({
     left: false,
@@ -40,6 +40,7 @@ export default function Drawers({setToggle}) {
 
   const handleContact =()=>{
     setToggle(false)
+    fetch()
   }
 
   const handleGroup =()=>{

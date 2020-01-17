@@ -16,6 +16,9 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
 const useStyles = makeStyles(theme => ({
+  point: {
+    cursor: 'pointer'
+  },
   paper: {
     marginTop: theme.spacing(4),
     display: "flex",
@@ -216,7 +219,7 @@ export default function Register() {
             </Button>
             <Grid container className={classes.marginTaas}>
               <Grid item>
-                <Link onClick={redir} variant="body2">
+                <Link onClick={redir} variant="body2" className={classes.point}>
                   {"Already have an account? Sign In"}
                 </Link>
               </Grid>

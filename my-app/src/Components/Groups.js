@@ -4,7 +4,6 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import AddContactDialog from "./HomeComps/AddContactDialog"
-import ContactsTable from "./HomeComps/ContactsTable";
 
 const useStyles = makeStyles(theme => ({
   drawer: {
@@ -29,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Groups({data, fetch}) {
+export default function Groups({ tempData, fetch}) {
   const classes = useStyles();
   
   return (
@@ -47,7 +46,7 @@ export default function Groups({data, fetch}) {
 
           <Grid item xs={12}>
             {/* CONTACTS TABLE */}
-            <ContactsTable data={data} fetch={fetch} />
+            asd
             {/* END TABLE */}
           </Grid>
         </Grid>

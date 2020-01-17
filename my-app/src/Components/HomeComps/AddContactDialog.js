@@ -26,7 +26,13 @@ import FlagIcon from '@material-ui/icons/Flag';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 
 const useStyles = makeStyles(theme => ({
-  fab:{
+  floating: {
+    position: 'fixed',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+    backgroundColor: green[500]
+  },
+  normal:{
     backgroundColor: green[500]
   },
   root: {
@@ -34,7 +40,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function AddContactDialog({ fetch }) {
+export default function AddContactDialog({ fetch, matches }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
@@ -332,7 +338,7 @@ export default function AddContactDialog({ fetch }) {
       <Tooltip title="Add contact" aria-label="add">
         <Fab
           color="primary"
-          className={classes.fab}
+          className={matches ? classes.normal : classes.floating}
           onClick={handleClickOpen}
         >
           <PersonAddIcon />

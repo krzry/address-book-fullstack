@@ -20,6 +20,9 @@ function Alert(props) {
 }
 
 const useStyles = makeStyles(theme => ({
+  point:{
+    cursor: 'pointer'
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
@@ -163,10 +166,6 @@ export default function Login() {
             onChange={e => handleChange(e)}
             defaultValue={state.data.username}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           <Button
             type="submit"
             fullWidth
@@ -178,7 +177,7 @@ export default function Login() {
           </Button>
           <Grid container>
             <Grid item>
-              <Link onClick={redirRegister} variant="body2">
+              <Link onClick={redirRegister} variant="body2" className={classes.point}>
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

@@ -14,8 +14,7 @@ import DeleteDialog from "./DeleteDialog";
 import Chip from "@material-ui/core/Chip";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
 import Button from "@material-ui/core/Button";
-import { useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+
 
 const useStyles = makeStyles(theme => ({
   view: {
@@ -35,15 +34,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ContactsTable({ data, fetch, sortFirst, sortLast }) {
+export default function ContactsTable({
+  fetch,
+  sortFirst,
+  sortLast,
+  tempData,
+  matches
+}) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  // USE MEDIAQUERY
-  const theme = useTheme();
+  
 
-  const matches = useMediaQuery(theme.breakpoints.up("sm"));
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -70,7 +73,7 @@ export default function ContactsTable({ data, fetch, sortFirst, sortLast }) {
           <TableHead>
             <TableRow>
               <TableCell id="first_name" style={{ minWidth: 50 }}>
-                First Name
+                Name
                 <Button onClick={handleSortLast}>
                   <ImportExportIcon />
                 </Button>
@@ -86,7 +89,7 @@ export default function ContactsTable({ data, fetch, sortFirst, sortLast }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data
+            {tempData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map(row => {
                 return (
@@ -128,7 +131,7 @@ export default function ContactsTable({ data, fetch, sortFirst, sortLast }) {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={data.length}
+        count={tempData.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onChangePage={handleChangePage}
