@@ -176,7 +176,6 @@ export default function Register() {
             />
             <TextField
               color={validationPass ? "primary" : "secondary"}
-              helperText={validationPass ? null : "Password does not match"}
               variant="outlined"
               margin="normal"
               required
@@ -193,7 +192,6 @@ export default function Register() {
             />
             <TextField
               color={validationPass ? "primary" : "secondary"}
-              helperText={validationPass ? null : "Password does not match"}
               variant="outlined"
               margin="normal"
               required

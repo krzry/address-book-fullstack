@@ -14,7 +14,7 @@ import axios from "axios";
 
 import Fab from "@material-ui/core/Fab";
 import Tooltip from "@material-ui/core/Tooltip";
-
+import indigo from '@material-ui/core/colors/indigo';
 //ICONS
 import InputAdornment from '@material-ui/core/InputAdornment';
 import PersonIcon from '@material-ui/icons/Person';
@@ -26,6 +26,10 @@ import FlagIcon from '@material-ui/icons/Flag';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 
 const useStyles = makeStyles(theme => ({
+  title:{
+    color: 'white',
+    backgroundColor: indigo[500]
+  },
   floating: {
     position: 'fixed',
     bottom: theme.spacing(2),
@@ -117,7 +121,7 @@ export default function AddContactDialog({ fetch, matches }) {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
+        <DialogTitle id="responsive-dialog-title" className={classes.title}>
           {"Add New Contact"}
         </DialogTitle>
         <form onSubmit={addContact}>
@@ -184,7 +188,7 @@ export default function AddContactDialog({ fetch, matches }) {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -204,7 +208,7 @@ export default function AddContactDialog({ fetch, matches }) {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -244,7 +248,7 @@ export default function AddContactDialog({ fetch, matches }) {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -263,7 +267,7 @@ export default function AddContactDialog({ fetch, matches }) {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -282,7 +286,7 @@ export default function AddContactDialog({ fetch, matches }) {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"
@@ -302,7 +306,7 @@ export default function AddContactDialog({ fetch, matches }) {
                   />
                 </Grid>
 
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     margin="normal"

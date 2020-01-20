@@ -3,7 +3,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
-import AddContactDialog from "./HomeComps/AddContactDialog"
+
+
+//COMPONENTS
+import GroupsTable from "./HomeComps/GroupComponents/GroupsTable";
+import AddGroupDialog from "./HomeComps/GroupComponents/AddGroupDialog";
 
 const useStyles = makeStyles(theme => ({
   drawer: {
@@ -28,9 +32,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Groups({ tempData, fetch}) {
+export default function Groups({ tempGroupData, fetchGroups, matches }) {
   const classes = useStyles();
-  
+
   return (
     <Container maxWidth="lg">
       <div className={classes.root}>
@@ -40,13 +44,17 @@ export default function Groups({ tempData, fetch}) {
               <PeopleAltIcon /> Groups
             </h1>
             {/* ADD CONTACTS DIALOG */}
-            <AddContactDialog fetch={fetch} />
+            <AddGroupDialog fetchGroups={fetchGroups} matches={matches} />
             {/* ADD CONTACTS */}
           </Grid>
 
           <Grid item xs={12}>
             {/* CONTACTS TABLE */}
-            asd
+            <GroupsTable
+              tempGroupData={tempGroupData}
+              fetchGroups={fetchGroups}
+              matches={matches}
+            />
             {/* END TABLE */}
           </Grid>
         </Grid>

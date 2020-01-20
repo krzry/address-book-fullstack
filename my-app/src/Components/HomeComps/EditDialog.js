@@ -24,6 +24,7 @@ import orange from "@material-ui/core/colors/orange";
 
 const useStyles = makeStyles(theme => ({
   button:{
+    color:'white',
     backgroundColor: orange[500]
   },
   root: {
@@ -31,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function EditDialog({ fetch, data }) {
+export default function EditDialog({ fetch, data, setOpenView }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
@@ -79,6 +80,7 @@ export default function EditDialog({ fetch, data }) {
       data: state.data
     })
       .then(data => {
+        setOpenView(false);
         setOpen(false);
         fetch();
       })

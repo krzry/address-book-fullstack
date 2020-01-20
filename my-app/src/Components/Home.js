@@ -97,7 +97,7 @@ export default function Home() {
     }
   };
   const [data, setData] = useState([]);
-  const [tempData, setTempData] = useState([])
+  const [tempData, setTempData] = useState([]);
   const [profileData, setProfileData] = useState([]);
   const [initial, setInitial] = useState({ first: "", last: "" });
   useEffect(() => {
@@ -125,6 +125,7 @@ export default function Home() {
         });
     }
     fetch();
+    fetchGroups();
   }, [history]);
 
   const sortFirst = () => {
@@ -144,7 +145,7 @@ export default function Home() {
       .then(data => {
         if (data.status === 200) {
           setData(data.data);
-          setTempData(data.data)
+          setTempData(data.data);
         } else {
           console.log("error");
         }
@@ -164,7 +165,29 @@ export default function Home() {
       .then(data => {
         if (data.status === 200) {
           setData(data.data);
-          setTempData(data.data)
+          setTempData(data.data);
+        } else {
+          console.log("error");
+        }
+      })
+
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  const [groupData, setGroupData] = useState([]);
+  const [tempGroupData, setTempGroupData] = useState([]);
+  const fetchGroups = () => {
+    const id = localStorage.getItem("currentID");
+    axios({
+      method: "get",
+      url: `http://localhost:3003/api/users/${id}/groups/asc`
+    })
+      .then(data => {
+        if (data.status === 200) {
+          setGroupData(data.data);
+          setTempGroupData(data.data);
         } else {
           console.log("error");
         }
@@ -216,7 +239,7 @@ export default function Home() {
         {/* Hero unit */}
         <div className={classes.heroContent}>
           {toggle ? (
-            <Groups tempData={tempData} fetch={fetch} />
+            <Groups tempGroupData={tempGroupData} fetchGroups={fetchGroups} matches={matches} groupData={groupData} />
           ) : (
             <Contacts
               data={data}
