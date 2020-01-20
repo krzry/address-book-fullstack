@@ -23,6 +23,10 @@ import LocationCityIcon from "@material-ui/icons/LocationCity";
 import orange from "@material-ui/core/colors/orange";
 
 const useStyles = makeStyles(theme => ({
+  fab:{
+    marginLeft: theme.spacing(1),
+    backgroundColor: orange[500]  
+  },
   button:{
     color:'white',
     backgroundColor: orange[500]

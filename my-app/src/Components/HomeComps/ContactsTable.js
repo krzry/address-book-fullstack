@@ -14,7 +14,7 @@ import DeleteDialog from "./DeleteDialog";
 import Chip from "@material-ui/core/Chip";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
 import Button from "@material-ui/core/Button";
-
+import AddToGroupDialog from "./AddToGroupDialog";
 
 const useStyles = makeStyles(theme => ({
   view: {
@@ -39,13 +39,14 @@ export default function ContactsTable({
   sortFirst,
   sortLast,
   tempData,
-  matches
+  matches,
+  groupData
 }) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  
+  const [openView, setOpenView] = React.useState(false);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -112,8 +113,16 @@ export default function ContactsTable({
                     {!matches ? null : (
                       <TableCell>
                         <div className={classes.buttons}>
+                          {/* ADD TO GROUP */}
+                          <AddToGroupDialog groupData={groupData} data={row} />
+                          {/* END ADD */}
+
                           {/* EDIT DIALOG */}
-                          <EditDialog data={row} fetch={fetch} />
+                          <EditDialog
+                            data={row}
+                            fetch={fetch}
+                            setOpenView={setOpenView}
+                          />
                           {/* END EDIT DIALOG */}
 
                           {/* DELETE DIALOG */}

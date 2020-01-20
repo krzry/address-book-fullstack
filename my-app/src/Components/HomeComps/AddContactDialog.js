@@ -14,7 +14,6 @@ import axios from "axios";
 
 import Fab from "@material-ui/core/Fab";
 import Tooltip from "@material-ui/core/Tooltip";
-import indigo from '@material-ui/core/colors/indigo';
 //ICONS
 import InputAdornment from '@material-ui/core/InputAdornment';
 import PersonIcon from '@material-ui/icons/Person';
@@ -28,7 +27,7 @@ import LocationCityIcon from '@material-ui/icons/LocationCity';
 const useStyles = makeStyles(theme => ({
   title:{
     color: 'white',
-    backgroundColor: indigo[500]
+    backgroundColor: green[500]
   },
   floating: {
     position: 'fixed',

@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Groups({ tempGroupData, fetchGroups, matches }) {
+export default function Groups({ tempGroupData, fetchGroups, matches, tempData, setTempData }) {
   const classes = useStyles();
 
   return (
@@ -54,6 +54,8 @@ export default function Groups({ tempGroupData, fetchGroups, matches }) {
               tempGroupData={tempGroupData}
               fetchGroups={fetchGroups}
               matches={matches}
+              tempData={tempData}
+              setTempData={setTempData}
             />
             {/* END TABLE */}
           </Grid>

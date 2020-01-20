@@ -51,7 +51,8 @@ export default function Groups({
   setData,
   tempData,
   setTempData,
-  matches
+  matches,
+  groupData
 }) {
   const classes = useStyles();
 
@@ -99,6 +100,8 @@ export default function Groups({
               sortLast={sortLast}
               tempData={tempData}
               matches={matches}
+              setTempData={setTempData}
+              groupData={groupData}
             />
             {/* END TABLE */}
           </Grid>

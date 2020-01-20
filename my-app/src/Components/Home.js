@@ -145,7 +145,25 @@ export default function Home() {
       .then(data => {
         if (data.status === 200) {
           setData(data.data);
-          setTempData(data.data);
+          setTempData(
+            data.data.map(row => {
+              return {
+                id: row.id,
+                userId: row.userId,
+                first_name: row.first_name,
+                last_name: row.last_name,
+                home_phone: row.home_phone,
+                mobile_phone: row.mobile_phone,
+                work_phone: row.work_phone,
+                email: row.email,
+                city: row.city,
+                state_or_province: row.state_or_province,
+                postal_code: row.postal_code,
+                country: row.country,
+                selected: false
+              };
+            })
+          );
         } else {
           console.log("error");
         }
@@ -239,7 +257,14 @@ export default function Home() {
         {/* Hero unit */}
         <div className={classes.heroContent}>
           {toggle ? (
-            <Groups tempGroupData={tempGroupData} fetchGroups={fetchGroups} matches={matches} groupData={groupData} />
+            <Groups
+              tempGroupData={tempGroupData}
+              fetchGroups={fetchGroups}
+              matches={matches}
+              groupData={groupData}
+              tempData={tempData}
+              setTempData={setTempData}
+            />
           ) : (
             <Contacts
               data={data}
@@ -250,6 +275,7 @@ export default function Home() {
               tempData={tempData}
               setTempData={setTempData}
               matches={matches}
+              groupData={groupData}
             />
           )}
         </div>
