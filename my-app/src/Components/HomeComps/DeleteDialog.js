@@ -10,8 +10,13 @@ import { useTheme, makeStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import axios from "axios";
+import red from "@material-ui/core/colors/red";
 
 const useStyles = makeStyles(theme => ({
+  title:{
+    backgroundColor: red[500],
+    color: 'white'
+  },
   fab: {
     marginLeft: theme.spacing(1)
   },
@@ -66,7 +71,7 @@ export default function DeleteDialog({ fetch, data }) {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
+        <DialogTitle id="responsive-dialog-title" className={classes.title}>
           {`Are you sure you want to delete ${data.first_name} ${data.last_name}?`}
         </DialogTitle>
         <DialogContent>

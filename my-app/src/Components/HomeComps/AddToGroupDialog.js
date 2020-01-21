@@ -14,6 +14,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Grid from "@material-ui/core/Grid";
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -29,28 +30,50 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function DeleteDialog({ groupData, data }) {
+export default function DeleteDialog({ data }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const [filteredData, setFilteredData] = useState([]);
   const handleClickOpen = () => {
     setOpen(true);
+
+    axios({
+      method: "get",
+      url: `http://localhost:3003/api/groupcontacts/user/${data.id}`
+    })
+      .then(data => {
+        setFilteredData(data.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleDelete = (e) => {
-    e.preventDefault()
-    console.log("object");
+    setSelected("");
   };
 
   const [selected, setSelected] = useState("");
   const handleChange = e => {
     setSelected(e.target.value);
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    axios({
+      method: "POST",
+      url: `http://localhost:3003/api/groups/${selected}/${data.id}`
+    })
+      .then(data => {
+        handleClose();
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   return (
@@ -70,7 +93,7 @@ export default function DeleteDialog({ groupData, data }) {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <form onSubmit={handleDelete}>
+        <form onSubmit={handleSubmit}>
           <DialogTitle className={classes.title} id="responsive-dialog-title">
             {`Add ${data.first_name} ${data.last_name} to: `}
           </DialogTitle>
@@ -91,9 +114,8 @@ export default function DeleteDialog({ groupData, data }) {
                       id="demo-simple-select-outlined"
                       value={selected}
                       onChange={handleChange}
-                      
                     >
-                      {groupData.map(row => (
+                      {filteredData.map(row => (
                         <MenuItem key={row.id} value={row.id}>
                           {row.group_name}
                         </MenuItem>
@@ -105,11 +127,11 @@ export default function DeleteDialog({ groupData, data }) {
             </div>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
+            <Button color="primary" type="submit">
+              Save
             </Button>
-            <Button  color="primary" autoFocus type="submit">
-              Agree
+            <Button onClick={handleClose} autoFocus color="primary">
+              Cancel
             </Button>
           </DialogActions>
         </form>

@@ -14,13 +14,10 @@ function listAsc(req, res) {
     });
 }
 
-function create(req, res) {
+function createGroup(req, res) {
   const db = req.app.get("db");
 
-  const {
-    userId,
-    group_name
-  } = req.body;
+  const { userId, group_name } = req.body;
 
   db.groups
     .save({
@@ -37,10 +34,7 @@ function create(req, res) {
 
 function update(req, res) {
   const db = req.app.get("db");
-  const {
-    userId,
-    group_name,
-  } = req.body;
+  const { userId, group_name } = req.body;
 
   db.groups
     .update(
@@ -61,7 +55,7 @@ function update(req, res) {
 
 function deleteGroup(req, res) {
   const db = req.app.get("db");
-  
+
   db.groups
     .destroy({
       id: req.params.id
@@ -75,6 +69,56 @@ function deleteGroup(req, res) {
     });
 }
 
-module.exports = {
-  listAsc,create, update,deleteGroup
+function addContactGroup(req, res) {
+  const db = req.app.get("db");
+
+  db.group_contacts
+    .save({
+      group_id: req.params.group_id,
+      contact_id: req.params.contact_id
+    })
+    .then(group => {
+      res.status(201).json(group);
+    })
+    .catch(err => {
+      console.error(err);
+    });
 }
+
+function listGroupContacts(req, res) {
+  const db = req.app.get("db");
+
+  db.query(
+    `SELECT *
+  FROM group_contacts 
+  WHERE group_id = ${req.params.id} `
+  )
+    .then(group => res.status(200).json(group))
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    });
+}
+
+function listMissingGroup(req, res) {
+  const db = req.app.get("db");
+
+  db.query(
+    `SELECT  groups.* FROM groups where id NOT IN (SELECT group_id FROM group_contacts WHERE contact_id=${req.params.contact_id})`
+  )
+    .then(group => res.status(200).json(group))
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    });
+}
+
+module.exports = {
+  listAsc,
+  createGroup,
+  update,
+  deleteGroup,
+  addContactGroup,
+  listGroupContacts,
+  listMissingGroup
+};

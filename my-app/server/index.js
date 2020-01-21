@@ -21,11 +21,16 @@ massive({
   app.use(cors());
   app.use(express.json());
 
+  //GROUP CONTACTS
+  app.get("/api/groupcontacts/:id", groups.listGroupContacts)
+  app.get("/api/groupcontacts/user/:contact_id", groups.listMissingGroup)
   //GROUPS
-  app.post("/api/groups", groups.create);
+  app.post("/api/groups", groups.createGroup);
   app.get("/api/users/:id/groups/asc", groups.listAsc);
   app.put("/api/groups/:id", groups.update);
   app.delete("/api/groups/:id", groups.deleteGroup);
+  app.post("/api/groups/:group_id/:contact_id", groups.addContactGroup)
+ 
   //CONTACTS
   app.post("/api/contacts", contacts.create);
   app.get("/api/users/:id/contacts/asc", contacts.listAsc);

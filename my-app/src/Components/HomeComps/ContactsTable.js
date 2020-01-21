@@ -102,6 +102,7 @@ export default function ContactsTable({
                           data={row}
                           matches={matches}
                           fetch={fetch}
+                          groupData={groupData}
                         />
 
                         {/* END DIALOG */}

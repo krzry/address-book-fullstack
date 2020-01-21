@@ -26,13 +26,18 @@ import Typography from "@material-ui/core/Typography";
 
 //COMPONENT
 import EditDialog from "./EditDialog";
+import AddToGroupDialog from "./AddToGroupDialog";
 
 const useStyles = makeStyles(theme => ({
+  flip:{
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
   title: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: theme.spacing(2, 2, 1),
+    padding: theme.spacing(2, 2, 2),
     backgroundColor: teal[500],
     color: "white"
   },
@@ -41,7 +46,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ViewDialog({ data, fetch, matches }) {
+export default function ViewDialog({ data, fetch, matches, groupData }) {
   const classes = useStyles();
   const [openView, setOpenView] = React.useState(false);
   const theme = useTheme();
@@ -92,9 +97,14 @@ export default function ViewDialog({ data, fetch, matches }) {
           <Typography variant="button" display="block" gutterBottom>
             View Contact
           </Typography>
-          {!matches ? (
-            <EditDialog data={data} fetch={fetch} setOpenView={setOpenView} />
-          ) : null}
+          <div className={classes.flip}>
+            {!matches ? (
+              <AddToGroupDialog groupData={groupData} data={data} />
+            ) : null}
+            {!matches ? (
+              <EditDialog data={data} fetch={fetch} setOpenView={setOpenView} />
+            ) : null}
+          </div>
         </div>
         <form>
           <DialogContent>
