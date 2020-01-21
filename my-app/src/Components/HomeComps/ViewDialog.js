@@ -23,15 +23,20 @@ import EmailIcon from "@material-ui/icons/Email";
 import FlagIcon from "@material-ui/icons/Flag";
 import LocationCityIcon from "@material-ui/icons/LocationCity";
 import Typography from "@material-ui/core/Typography";
+import red from "@material-ui/core/colors/red";
 
 //COMPONENT
 import EditDialog from "./EditDialog";
 import AddToGroupDialog from "./AddToGroupDialog";
 
 const useStyles = makeStyles(theme => ({
-  flip:{
-    display: 'flex',
-    justifyContent: 'space-between'
+  deletetitle: {
+    backgroundColor: red[500],
+    color: "white"
+  },
+  flip: {
+    display: "flex",
+    justifyContent: "space-between"
   },
   title: {
     display: "flex",
@@ -329,7 +334,10 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
         onClose={handleCloseDialog}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
+        <DialogTitle
+          id="responsive-dialog-title"
+          className={classes.deletetitle}
+        >
           {`Are you sure you want to delete ${data.first_name} ${data.last_name}?`}
         </DialogTitle>
         <DialogContent>

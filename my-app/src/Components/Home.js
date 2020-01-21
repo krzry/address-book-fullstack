@@ -24,6 +24,13 @@ import Contacts from "./Contacts";
 import jwt from "jwt-decode";
 
 const useStyles = makeStyles(theme => ({
+  headButtons: {
+    color: "white"
+  },
+  miniCont: {
+    display: "flex",
+    justifyContent: "space-between"
+  },
   drawer: {
     display: "flex",
     alignItems: "center"
@@ -215,6 +222,14 @@ export default function Home() {
         console.log(err);
       });
   };
+  
+  const handleContacts = () =>{
+    setToggle(false)
+  }
+
+  const handleGroups = () =>{
+    setToggle(true)
+  }
 
   return (
     <React.Fragment>
@@ -223,34 +238,47 @@ export default function Home() {
       <AppBar position="relative">
         <Toolbar className={classes.header}>
           <div className={classes.drawer}>
-            <Drawer setToggle={setToggle} fetch={fetch} />
+            {matches ? null : <Drawer setToggle={setToggle} fetch={fetch} />}
+
             <Typography variant="h6" color="inherit" noWrap>
               Address Book
             </Typography>
           </div>
+          <div className={classes.miniCont}>
+            {matches ? (
+              <Button className={classes.headButtons} onClick={handleContacts}>
+                Contacts
+              </Button>
+            ) : null}
+            {matches ? (
+              <Button className={classes.headButtons} onClick={handleGroups}>
+                Groups
+              </Button>
+            ) : null}
 
-          <Button
-            aria-controls="simple-menu"
-            aria-haspopup="true"
-            onClick={handleClick}
-          >
-            <Avatar className={classes.orange}>
-              {initial.first}
-              {initial.last}
-            </Avatar>
-          </Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem disabled>
-              Logged in as {profileData.firstname} {profileData.lastname}
-            </MenuItem>
-            <MenuItem onClick={() => logoutFn()}>Logout</MenuItem>
-          </Menu>
+            <Button
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              onClick={handleClick}
+            >
+              <Avatar className={classes.orange}>
+                {initial.first}
+                {initial.last}
+              </Avatar>
+            </Button>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem disabled>
+                Logged in as {profileData.firstname} {profileData.lastname}
+              </MenuItem>
+              <MenuItem onClick={() => logoutFn()}>Logout</MenuItem>
+            </Menu>
+          </div>
         </Toolbar>
       </AppBar>
       <main>

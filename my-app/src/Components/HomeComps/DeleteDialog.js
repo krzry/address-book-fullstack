@@ -13,9 +13,9 @@ import axios from "axios";
 import red from "@material-ui/core/colors/red";
 
 const useStyles = makeStyles(theme => ({
-  title:{
+  title: {
     backgroundColor: red[500],
-    color: 'white'
+    color: "white"
   },
   fab: {
     marginLeft: theme.spacing(1)
