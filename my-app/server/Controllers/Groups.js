@@ -89,9 +89,7 @@ function listGroupContacts(req, res) {
   const db = req.app.get("db");
 
   db.query(
-    `SELECT *
-  FROM group_contacts 
-  WHERE group_id = ${req.params.id} `
+    `SELECT contacts.* FROM contacts WHERE id IN (select contact_id from group_contacts where group_id=${req.params.id}) `
   )
     .then(group => res.status(200).json(group))
     .catch(err => {
@@ -113,6 +111,17 @@ function listMissingGroup(req, res) {
     });
 }
 
+function removeContact(req, res) {
+  const db = req.app.get("db");
+
+  db.query(`DELETE FROM group_contacts WHERE contact_id = ${req.params.id}`)
+    .then(group => res.status(200).json(group))
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    });
+}
+
 module.exports = {
   listAsc,
   createGroup,
@@ -120,5 +129,6 @@ module.exports = {
   deleteGroup,
   addContactGroup,
   listGroupContacts,
-  listMissingGroup
+  listMissingGroup,
+  removeContact
 };

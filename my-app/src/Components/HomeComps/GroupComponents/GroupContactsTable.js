@@ -9,9 +9,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 
-// COMPONENTS
-import EditGroupDialog from "./EditGroupDialog";
-import ViewGroupContacts from "./ViewGroupContacts";
+import DeleteGroupContactDialog from "./DeleteGroupContactDialog";
 
 const useStyles = makeStyles(theme => ({
   view: {
@@ -31,12 +29,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function GroupsTable({
-  fetchGroups,
-  tempGroupData,
+export default function GroupContactsTable({
+  data,
   matches,
-  tempData,
-  setTempData
+  fetchGroupContacts
 }) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
@@ -57,16 +53,21 @@ export default function GroupsTable({
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell id="first_name" style={{ minWidth: 50 }}>
-                Group Name
+              <TableCell id="name" style={{ minWidth: 50 }}>
+                Name
               </TableCell>
-              <TableCell id="buttons" style={{ minWidth: 50 }}>
-                Buttons
+              <TableCell id="mobile_phone" style={{ minWidth: 50 }}>
+                Mobile Phone
               </TableCell>
+              {!matches ? null : (
+                <TableCell id="buttons" style={{ minWidth: 50 }}>
+                  Buttons
+                </TableCell>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
-            {tempGroupData
+            {data
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map(row => {
                 return (
@@ -74,24 +75,23 @@ export default function GroupsTable({
                     <TableCell key={row.id}>
                       <div className={classes.view}>
                         {/* VIEW DIALOG */}
-                        {row.group_name}
+                        {`${row.first_name} ${row.last_name}`}
                         {/* END DIALOG */}
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className={classes.buttons}>
-                        {/* EDIT DIALOG */}
-                        <EditGroupDialog data={row} fetchGroups={fetchGroups} />
-                        {/* END EDIT DIALOG */}
-
-                        {/* DELETE DIALOG */}
-                        <ViewGroupContacts
-                          groupData={row}
-                          matches={matches}
-                        />
-                        {/* END DELETE DIALOG */}
-                      </div>
-                    </TableCell>
+                    <TableCell>{row.mobile_phone}</TableCell>
+                    {!matches ? null : (
+                      <TableCell>
+                        <div className={classes.buttons}>
+                          {/* DELETE DIALOG */}
+                          <DeleteGroupContactDialog
+                            data={row}
+                            fetchGroupContacts={fetchGroupContacts}
+                          />
+                          {/* END DELETE DIALOG */}
+                        </div>
+                      </TableCell>
+                    )}
                   </TableRow>
                 );
               })}
@@ -101,7 +101,7 @@ export default function GroupsTable({
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={tempGroupData.length}
+        count={data.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onChangePage={handleChangePage}

@@ -248,14 +248,15 @@ export default function Home() {
             {matches ? (
               <Button className={classes.headButtons} onClick={handleContacts}>
                 Contacts
-              </Button>
+              </Button> 
+              
             ) : null}
+            
             {matches ? (
               <Button className={classes.headButtons} onClick={handleGroups}>
                 Groups
               </Button>
             ) : null}
-
             <Button
               aria-controls="simple-menu"
               aria-haspopup="true"

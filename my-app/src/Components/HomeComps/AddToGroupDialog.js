@@ -15,8 +15,17 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Grid from "@material-ui/core/Grid";
 import axios from "axios";
+import MuiAlert from "@material-ui/lab/Alert";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles(theme => ({
+  width: {
+    width: "100%",
+    marginTop: theme.spacing(1)
+  },
   formControl: {
     margin: theme.spacing(2),
     minWidth: 300
@@ -55,6 +64,7 @@ export default function DeleteDialog({ data }) {
   const handleClose = () => {
     setOpen(false);
     setSelected("");
+    setValid(null);
   };
 
   const [selected, setSelected] = useState("");
@@ -62,18 +72,23 @@ export default function DeleteDialog({ data }) {
     setSelected(e.target.value);
   };
 
+  const [valid, setValid] = useState(null);
   const handleSubmit = e => {
     e.preventDefault();
-    axios({
-      method: "POST",
-      url: `http://localhost:3003/api/groups/${selected}/${data.id}`
-    })
-      .then(data => {
-        handleClose();
+    if (selected === ``) {
+      setValid(true);
+    } else {
+      axios({
+        method: "POST",
+        url: `http://localhost:3003/api/groups/${selected}/${data.id}`
       })
-      .catch(err => {
-        console.log(err);
-      });
+        .then(data => {
+          handleClose();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   };
 
   return (
@@ -101,6 +116,11 @@ export default function DeleteDialog({ data }) {
             <div className={classes.root}>
               <Grid container spacing={1}>
                 <Grid item xs={12} sm={12}>
+                  {valid ? (
+                    <Alert severity="error" className={classes.width}>
+                      Please select a group!
+                    </Alert>
+                  ) : null}
                   <FormControl
                     variant="outlined"
                     className={classes.formControl}

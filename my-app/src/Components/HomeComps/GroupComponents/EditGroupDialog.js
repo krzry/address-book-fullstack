@@ -118,10 +118,10 @@ export default function EditDialog({ fetchGroups, data }) {
         </form>
       </Dialog>
       <Fab
-        color="primary"
+        color="secondary"
         aria-label="edit"
         size="small"
-        className={classes.fab}
+        className={classes.button}
         onClick={handleClickOpen}
       >
         <EditIcon />

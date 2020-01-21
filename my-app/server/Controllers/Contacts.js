@@ -114,9 +114,9 @@ function update(req, res) {
 function deleteContact(req, res) {
   const db = req.app.get("db");
   
-  db.contacts
-    .destroy({
-      id: req.params.id
+  db.query(`DELETE FROM group_contacts WHERE contact_id = ${req.params.id}`)
+    .then(() => {
+      db.query(`DELETE FROM contacts WHERE id = ${req.params.id}`)
     })
     .then(() => {
       res.status(200).send("Contact Deleted");
