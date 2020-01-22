@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   view: {
     backgroundColor: teal[500],
     color: "white",
-    marginLeft: theme.spacing(1)
+    marginRight: theme.spacing(1)
   }
 }));
 
@@ -71,6 +71,8 @@ export default function ViewGroupContacts({ groupData, matches }) {
         open={open}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
+        maxWidth="lg"
+        fullWidth
       >
         <DialogTitle id="responsive-dialog-title" className={classes.title}>
           {`${groupData.group_name}`}

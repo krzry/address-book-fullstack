@@ -38,6 +38,7 @@ massive({
   app.get("/api/users/:id/contacts/desc", contacts.listDesc);
   app.put("/api/contacts/:id", contacts.update);
   app.delete("/api/contacts/:id", contacts.deleteContact);
+  app.get("/api/contacts/:id", contacts.viewContactInfo)
   //USERS
   app.get("/api/users", users.list);
   app.post("/api/users", users.create);

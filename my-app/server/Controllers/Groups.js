@@ -56,12 +56,12 @@ function update(req, res) {
 function deleteGroup(req, res) {
   const db = req.app.get("db");
 
-  db.groups
-    .destroy({
-      id: req.params.id
+  db.query(`DELETE FROM group_contacts WHERE group_id = ${req.params.id}`)
+    .then(() => {
+      db.query(`DELETE FROM groups WHERE id = ${req.params.id}`);
     })
     .then(() => {
-      res.status(200).send("Contact Deleted");
+      res.status(200).send("Group Deleted");
     })
     .catch(error => {
       console.error(error);

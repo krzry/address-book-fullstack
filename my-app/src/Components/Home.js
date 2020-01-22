@@ -21,7 +21,6 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Drawer from "./HomeComps/Drawer";
 import Groups from "./Groups";
 import Contacts from "./Contacts";
-import jwt from "jwt-decode";
 
 const useStyles = makeStyles(theme => ({
   headButtons: {
@@ -80,8 +79,6 @@ export default function Home() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
-  //   var decoded = jwt(localStorage.getItem("accessToken"));
-  // console.log(decoded);
 
   const [toggle, setToggle] = useState(false);
 

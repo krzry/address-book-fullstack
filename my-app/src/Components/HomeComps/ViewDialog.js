@@ -90,6 +90,35 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
     setOpenDialog(false);
   };
 
+  const [details, setDetails] = useState(data);
+  const fetchDetails = () => {
+    axios({
+      method: "get",
+      url: `http://localhost:3003/api/contacts/${data.id}`
+    })
+      .then(data => {
+        let tempData = {
+          id: data.data[0].id,
+          userId: data.data[0].userId,
+          first_name: data.data[0].first_name,
+          last_name: data.data[0].last_name,
+          home_phone: data.data[0].home_phone,
+          mobile_phone: data.data[0].mobile_phone,
+          work_phone: data.data[0].work_phone,
+          email: data.data[0].email,
+          city: data.data[0].city,
+          state_or_province: data.data[0].state_or_province,
+          postal_code: data.data[0].postal_code,
+          country: data.data[0].country
+        };
+        setDetails(tempData);
+      })
+
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   return (
     <div>
       <Dialog
@@ -107,7 +136,12 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
               <AddToGroupDialog groupData={groupData} data={data} />
             ) : null}
             {!matches ? (
-              <EditDialog data={data} fetch={fetch} setOpenView={setOpenView} />
+              <EditDialog
+                data={data}
+                fetch={fetch}
+                setOpenView={setOpenView}
+                fetchDetails={fetchDetails}
+              />
             ) : null}
           </div>
         </div>
@@ -123,7 +157,7 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
                     fullWidth
                     label="First Name"
                     name="first_name"
-                    defaultValue={data.first_name}
+                    value={details.first_name}
                     InputProps={{
                       readOnly: true,
                       startAdornment: (
@@ -142,7 +176,7 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
                     fullWidth
                     label="Last Name"
                     name="last_name"
-                    defaultValue={data.last_name}
+                    value={details.last_name}
                     InputProps={{
                       readOnly: true,
                       startAdornment: (
@@ -162,7 +196,7 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
                     fullWidth
                     label="Mobile Phone"
                     name="mobile_phone"
-                    defaultValue={data.mobile_phone}
+                    value={details.mobile_phone}
                     InputProps={{
                       readOnly: true,
                       startAdornment: (
@@ -181,7 +215,7 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
                     fullWidth
                     label="Home Phone"
                     name="home_phone"
-                    defaultValue={data.home_phone}
+                    value={details.home_phone}
                     InputProps={{
                       readOnly: true,
                       startAdornment: (
@@ -200,7 +234,7 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
                     fullWidth
                     label="Work Phone"
                     name="work_phone"
-                    defaultValue={data.work_phone}
+                    value={details.work_phone}
                     InputProps={{
                       readOnly: true,
                       startAdornment: (
@@ -220,7 +254,7 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
                     label="E-mail"
                     name="email"
                     type="email"
-                    defaultValue={data.email}
+                    value={details.email}
                     InputProps={{
                       readOnly: true,
                       startAdornment: (
@@ -239,7 +273,7 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
                     fullWidth
                     label="Country"
                     name="country"
-                    defaultValue={data.country}
+                    value={details.country}
                     InputProps={{
                       readOnly: true,
                       startAdornment: (
@@ -258,7 +292,7 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
                     fullWidth
                     label="State or province"
                     name="state_or_province"
-                    defaultValue={data.state_or_province}
+                    value={details.state_or_province}
                     InputProps={{
                       readOnly: true,
                       startAdornment: (
@@ -277,7 +311,7 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
                     fullWidth
                     label="City"
                     name="city"
-                    defaultValue={data.city}
+                    value={details.city}
                     InputProps={{
                       readOnly: true,
                       startAdornment: (
@@ -297,7 +331,7 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
                     fullWidth
                     label="Postal Code"
                     name="postal_code"
-                    defaultValue={data.postal_code}
+                    value={details.postal_code}
                     InputProps={{
                       readOnly: true,
                       startAdornment: (
@@ -341,7 +375,10 @@ export default function ViewDialog({ data, fetch, matches, groupData }) {
           {`Are you sure you want to delete ${data.first_name} ${data.last_name}?`}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>You can't revert the changes.</DialogContentText>
+          <DialogContentText>
+            Deleting this contact will also remove them in their respective
+            groups.
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleCloseDialog} color="primary">

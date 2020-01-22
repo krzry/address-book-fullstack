@@ -46,7 +46,6 @@ export default function ContactsTable({
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const [openView, setOpenView] = React.useState(false);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -122,7 +121,6 @@ export default function ContactsTable({
                           <EditDialog
                             data={row}
                             fetch={fetch}
-                            setOpenView={setOpenView}
                           />
                           {/* END EDIT DIALOG */}
 

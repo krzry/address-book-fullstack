@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function EditDialog({ fetch, data, setOpenView }) {
+export default function EditDialog({ fetch, data, setOpenView, fetchDetails }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
@@ -84,7 +84,9 @@ export default function EditDialog({ fetch, data, setOpenView }) {
       data: state.data
     })
       .then(data => {
-        setOpenView(false);
+        if(fetchDetails){
+          fetchDetails();
+        }
         setOpen(false);
         fetch();
       })

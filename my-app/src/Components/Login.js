@@ -9,7 +9,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { useHistory, Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import MuiAlert from "@material-ui/lab/Alert";
 
@@ -47,8 +47,6 @@ const useStyles = makeStyles(theme => ({
 export default function Login() {
   const history = useHistory();
   const classes = useStyles();
-  const [redirect, setRedirect] = useState(false);
-  const [redirectHome, setRedirectHome] = useState(false);
   const [valid, setValid] = useState(null);
   const [state, setState] = useState({
     data: {
@@ -65,28 +63,8 @@ export default function Login() {
     }
   }, [history]);
 
-  const redirectRegister = () => {
-    if (redirect) {
-      return (
-        <Redirect
-          to={{
-            pathname: "/register"
-          }}
-        />
-      );
-    } else if (redirectHome) {
-      return (
-        <Redirect
-          to={{
-            pathname: "/home"
-          }}
-        />
-      );
-    }
-  };
-
   const redirRegister = () => {
-    setRedirect(true);
+    history.push("/register");
   };
 
   const loginFn = e => {
@@ -100,7 +78,7 @@ export default function Login() {
         if (data.status === 200) {
           localStorage.setItem("accessToken", data.data.token);
           localStorage.setItem("currentID", data.data.id);
-          setRedirectHome(true);
+          window.location.href = "/home";
           setValid(null);
         } else {
           console.log("error");
@@ -125,7 +103,6 @@ export default function Login() {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      {redirectRegister()}
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />

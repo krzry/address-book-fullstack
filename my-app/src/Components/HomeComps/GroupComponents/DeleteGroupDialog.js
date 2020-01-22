@@ -6,26 +6,21 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme, makeStyles } from "@material-ui/core/styles";
+import { useTheme } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import axios from "axios";
+import { makeStyles } from "@material-ui/core/styles";
 import red from "@material-ui/core/colors/red";
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
   title: {
     backgroundColor: red[500],
     color: "white"
-  },
-  fab: {
-    marginLeft: theme.spacing(1)
-  },
-  root: {
-    flexGrow: 1
   }
 }));
 
-export default function DeleteDialog({ fetch, data }) {
+export default function ResponsiveDialog({ groupData, fetchGroups }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
@@ -39,19 +34,16 @@ export default function DeleteDialog({ fetch, data }) {
     setOpen(false);
   };
 
-  const handleDelete = () => {
+  const handleAgree = () => {
     axios({
       method: "delete",
-      url: `http://localhost:3003/api/contacts/${data.id}`
+      url: `http://localhost:3003/api/groups/${groupData.id}`
     })
       .then(data => {
-        fetch();
-        setOpen(false);
+        fetchGroups();
+        handleClose();
       })
-
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(err => console.log(err));
   };
 
   return (
@@ -60,7 +52,6 @@ export default function DeleteDialog({ fetch, data }) {
         color="secondary"
         aria-label="edit"
         size="small"
-        className={classes.fab}
         onClick={handleClickOpen}
       >
         <DeleteOutlineIcon />
@@ -72,16 +63,18 @@ export default function DeleteDialog({ fetch, data }) {
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title" className={classes.title}>
-          {`Are you sure you want to delete ${data.first_name} ${data.last_name}?`}
+          {`Are you sure you want to delete ${groupData.group_name}?`}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>Deleting this contact will also remove them in their respective groups.</DialogContentText>
+          <DialogContentText>
+            Deleting this group will also delete its contacts inside.
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} color="primary" autoFocus>
+          <Button onClick={handleAgree} color="primary" autoFocus>
             Agree
           </Button>
         </DialogActions>

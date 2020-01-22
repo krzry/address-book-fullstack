@@ -113,10 +113,10 @@ function update(req, res) {
 
 function deleteContact(req, res) {
   const db = req.app.get("db");
-  
+
   db.query(`DELETE FROM group_contacts WHERE contact_id = ${req.params.id}`)
     .then(() => {
-      db.query(`DELETE FROM contacts WHERE id = ${req.params.id}`)
+      db.query(`DELETE FROM contacts WHERE id = ${req.params.id}`);
     })
     .then(() => {
       res.status(200).send("Contact Deleted");
@@ -127,10 +127,27 @@ function deleteContact(req, res) {
     });
 }
 
+function viewContactInfo(req, res) {
+  const db = req.app.get("db");
+
+  db.query(
+    `SELECT *
+  FROM contacts 
+  WHERE id = ${req.params.id} 
+  ORDER BY contacts.last_name ASC`
+  )
+    .then(contact => res.status(200).json(contact))
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    });
+}
+
 module.exports = {
   create,
   listAsc,
   listDesc,
   update,
-  deleteContact
+  deleteContact,
+  viewContactInfo
 };

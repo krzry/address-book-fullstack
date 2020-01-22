@@ -19,7 +19,8 @@ import orange from "@material-ui/core/colors/orange";
 const useStyles = makeStyles(theme => ({
   button:{
     color:'white',
-    backgroundColor: orange[500]
+    backgroundColor: orange[500],
+    marginRight: theme.spacing(1)
   },
   root: {
     flexGrow: 1

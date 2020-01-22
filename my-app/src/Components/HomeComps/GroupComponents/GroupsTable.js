@@ -12,15 +12,12 @@ import TableRow from "@material-ui/core/TableRow";
 // COMPONENTS
 import EditGroupDialog from "./EditGroupDialog";
 import ViewGroupContacts from "./ViewGroupContacts";
+import DeleteGroupDialog from "./DeleteGroupDialog";
 
 const useStyles = makeStyles(theme => ({
-  view: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start"
-  },
   buttons: {
-    display: "flex"
+    display: "flex",
+    justifyContent: "center"
   },
   root: {
     width: "100%"
@@ -31,13 +28,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function GroupsTable({
-  fetchGroups,
-  tempGroupData,
-  matches,
-  tempData,
-  setTempData
-}) {
+export default function GroupsTable({ fetchGroups, tempGroupData, matches }) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -57,10 +48,16 @@ export default function GroupsTable({
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell id="first_name" style={{ minWidth: 50 }}>
+              <TableCell
+                id="first_name"
+                style={{ minWidth: 50, textAlign: "center" }}
+              >
                 Group Name
               </TableCell>
-              <TableCell id="buttons" style={{ minWidth: 50 }}>
+              <TableCell
+                id="buttons"
+                style={{ minWidth: 50, textAlign: "center" }}
+              >
                 Buttons
               </TableCell>
             </TableRow>
@@ -71,24 +68,23 @@ export default function GroupsTable({
               .map(row => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                    <TableCell key={row.id}>
-                      <div className={classes.view}>
-                        {/* VIEW DIALOG */}
-                        {row.group_name}
-                        {/* END DIALOG */}
-                      </div>
+                    <TableCell key={row.id} align="center">
+                      {/* VIEW DIALOG */}
+                      {row.group_name}
+                      {/* END DIALOG */}
                     </TableCell>
                     <TableCell>
                       <div className={classes.buttons}>
+                        {/* VIEW DIALOG */}
+                        <ViewGroupContacts groupData={row} matches={matches} />
+                        {/* EDIT VIEW DIALOG */}
+
                         {/* EDIT DIALOG */}
                         <EditGroupDialog data={row} fetchGroups={fetchGroups} />
                         {/* END EDIT DIALOG */}
 
                         {/* DELETE DIALOG */}
-                        <ViewGroupContacts
-                          groupData={row}
-                          matches={matches}
-                        />
+                        <DeleteGroupDialog groupData={row} fetchGroups={fetchGroups} />
                         {/* END DELETE DIALOG */}
                       </div>
                     </TableCell>
