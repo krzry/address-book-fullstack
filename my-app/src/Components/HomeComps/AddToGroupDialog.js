@@ -48,10 +48,10 @@ export default function DeleteDialog({ data }) {
   const [filteredData, setFilteredData] = useState([]);
   const handleClickOpen = () => {
     setOpen(true);
-
+    const id = localStorage.getItem("currentID");
     axios({
       method: "get",
-      url: `http://localhost:3003/api/groupcontacts/user/${data.id}`
+      url: `http://localhost:3003/api/groupcontacts/user/${id}/${data.id}`
     })
       .then(data => {
         setFilteredData(data.data);
@@ -80,7 +80,7 @@ export default function DeleteDialog({ data }) {
     } else {
       axios({
         method: "POST",
-        url: `http://localhost:3003/api/groups/${selected}/${data.id}`
+        url: `http://172.60.61.155:3003/api/groups/${selected}/${data.id}`
       })
         .then(data => {
           handleClose();

@@ -17,8 +17,12 @@ import GroupIcon from "@material-ui/icons/Group";
 import orange from "@material-ui/core/colors/orange";
 
 const useStyles = makeStyles(theme => ({
-  button:{
-    color:'white',
+  title: {
+    color: "white",
+    backgroundColor: orange[500]
+  },
+  button: {
+    color: "white",
     backgroundColor: orange[500],
     marginRight: theme.spacing(1)
   },
@@ -80,7 +84,9 @@ export default function EditDialog({ fetchGroups, data }) {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title" className={classes.button} >{"Edit Group name"}</DialogTitle>
+        <DialogTitle id="responsive-dialog-title" className={classes.title}>
+          {"Edit Group name"}
+        </DialogTitle>
         <form onSubmit={editContact}>
           <DialogContent>
             <div className={classes.root}>

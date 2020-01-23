@@ -23,7 +23,7 @@ massive({
 
   //GROUP CONTACTS
   app.get("/api/groupcontacts/:id", groups.listGroupContacts)
-  app.get("/api/groupcontacts/user/:contact_id", groups.listMissingGroup)
+  app.get("/api/groupcontacts/user/:user_id/:contact_id", groups.listMissingGroup)
   app.delete("/api/groupcontacts/:id", groups.removeContact)
   //GROUPS
   app.post("/api/groups", groups.createGroup);

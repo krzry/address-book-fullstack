@@ -102,7 +102,7 @@ function listMissingGroup(req, res) {
   const db = req.app.get("db");
 
   db.query(
-    `SELECT  groups.* FROM groups where id NOT IN (SELECT group_id FROM group_contacts WHERE contact_id=${req.params.contact_id})`
+    `SELECT  groups.* FROM groups where "userId" =${req.params.user_id} AND id NOT IN (SELECT group_id FROM group_contacts WHERE contact_id=${req.params.contact_id})`
   )
     .then(group => res.status(200).json(group))
     .catch(err => {
