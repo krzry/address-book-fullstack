@@ -80,7 +80,7 @@ export default function DeleteDialog({ data }) {
     } else {
       axios({
         method: "POST",
-        url: `http://172.60.61.155:3003/api/groups/${selected}/${data.id}`
+        url: `http://localhost:3003/api/groups/${selected}/${data.id}`
       })
         .then(data => {
           handleClose();
